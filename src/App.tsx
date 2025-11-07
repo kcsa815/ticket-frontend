@@ -1,60 +1,76 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Routes, Route, Link } from 'react-router-dom';
-
-// 1. 우리가 만든 페이지 컴포넌트들 임포트
 import HomePage from './pages/HomePage';
 import MusicalDetailPage from './pages/MusicalDetailPage';
+import { useAuth } from './context/AuthContext';
 
-// (참고: 로그인 폼은 나중에 별도 'LoginPage.tsx'로 분리하는 것이 좋습니다)
-// (App.tsx에 있던 로그인 로직을 임시로 가져옵니다)
+/* import.meta.env.VITE_API_URL는
+ * '개발 중'(npm run dev)에는 undefined 이고,
+ * '배포 시'(npm run build)에는 'https://api.my-musical.com'이 됨*/
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
+
+/*로그인 로직*/
 function App() {
-  // --- (App.tsx에 임시로 로그인 로직 유지) ---
+  const {isLoggedIn, login, logout} = useAuth();
+  // 로그인 폼을 위한 로컬 state(이메일, 비밀번호, 에러)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [token, setToken] = useState<string | null>(null);
   const [error, setError] = useState('');
 
+
+  //로그인 핸들러
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
-    setToken(null);
 
     try {
       const response = await axios.post('http://localhost:8080/api/users/login', { email, password });
       const accessToken = response.data.accessToken;
-      setToken(accessToken);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-      // localStorage.setItem('token', accessToken);
+     
+      //AuthContext의 login함수 호출
+      // 이 함수가 토큰을 state와 localStorage에 모두 저장해 줌
+      login(accessToken);
+
+      //폼 초기화
+      setEmail('');
+      setPassword('');
+
     } catch (err) {
       setError('로그인 실패 (ID/PW 확인)');
     }
   };
-  // --- (로그인 로직 끝) ---
+
+  //로그아웃 핸들러
+  const handleLogout = () =>{
+    logout();  //Context의 logout함수 호출
+  };
+
 
   return (
     <div style={{ padding: '20px' }}>
       {/* --- 1. 헤더/네비게이션 (모든 페이지 공통) --- */}
       <header style={{ borderBottom: '2px solid black', paddingBottom: '10px' }}>
-        <Link to="/"> {/* "/" (홈)으로 가는 링크 */}
-          <h1>뮤지컬 예매 사이트</h1>
-        </Link>
-        {/* (간단한 로그인 폼) */}
-        {!token ? (
-          <form onSubmit={handleSubmit} style={{ float: 'right' }}>
-            <input type="email" placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Link to="/"> <h1>뮤지컬 예매 사이트</h1></Link>
+        
+        {/* lsLoggedIn 값에 따라 로그인 폼 또는 로그아웃 버튼 표시 */}
+        {!isLoggedIn?(
+          <form onSubmit={handleSubmit} style={{float:'right'}}>
+            <input type='email' placeholder='이메일' value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input type='password' placeholder='비밀번호' value={password} onChange={(e) => setPassword(e.target.value)} />
             <button type="submit">로그인</button>
-            {error && <div style={{ color: 'red', fontSize: '12px' }}>{error}</div>}
+            {error && <div style={{color:'red', fontSize:'12px'}}>{error}</div>}
           </form>
         ) : (
-          <div style={{ float: 'right' }}>
-            <strong>로그인 성공!</strong>
-            {/* TODO: 여기에 "내 정보" 또는 "로그아웃" 버튼 추가 */}
+          <div>
+            <strong>로그인 되었습니다!</strong>
+            <button onClick={handleLogout} style={{marginLeft: '10px'}}>로그아웃</button>
+            {/*여기에 마이페이지 링크 추가할거임*/}
           </div>
-        )}
+        )}  
       </header>
+
 
       {/* --- 2. 메인 컨텐츠 (페이지 영역) --- */}
       <main style={{ marginTop: '20px' }}>
