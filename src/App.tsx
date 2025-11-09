@@ -52,7 +52,7 @@ function App() {
     <div style={{ padding: '20px' }}>
       {/* --- 1. 헤더/네비게이션 (모든 페이지 공통) --- */}
       <header style={{ borderBottom: '2px solid black', paddingBottom: '10px' }}>
-        <Link to="/"> <h1>뮤지컬 예매 사이트</h1></Link>
+        <Link to="/"> <h1>^^ㅣㄱ뮤</h1></Link>
         
         {/* lsLoggedIn 값에 따라 로그인 폼 또는 로그아웃 버튼 표시 */}
         {!isLoggedIn?(
