@@ -1,0 +1,32 @@
+/* 1. [수정] 네비게이션 바 '배경' (100% 너비) */
+.navbar {
+  width: 100%;
+  background-color: #e9e9e9;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #909090;
+}
+
+/* 2. [신규] 네비게이션 '알맹이' (1200px 래퍼 + flex) */
+/* (TSX에서 .content-wrapper와 함께 사용됨) */
+.navbarContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+/*  링크 개별 스타일 */
+.navLink {
+  color: #333333;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.navLink:hover {
+  color: #d9534f;
+  background-color: #f0f0f0;
+}

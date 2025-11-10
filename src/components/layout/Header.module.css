@@ -1,0 +1,97 @@
+
+.header {
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-sizing: border-box;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* 로고와 검색창 사이 간격 */
+}
+
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+  flex-shrink: 0; 
+}
+
+/* 검색창 */
+.searchBar {
+  display: flex;
+  height: 40px;
+  width: 350px;
+  border: 1px solid #616162;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.searchBar input {
+  flex-grow: 1; /* input이 남는 공간 차지 */
+  width: 0;
+  border: none;
+  padding: 8px 15px;
+  font-size: 15px;
+  outline: none;
+  background: none;
+}
+
+.searchBar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 18px; 
+  padding: 0 15px; 
+  flex-shrink: 0; /* 아이콘 버튼이 찌그러지지 않도록 */
+}
+.searchBar button:hover {
+  color: #d9534f;
+}
+
+/* 사용자 메뉴 (로그인/내 예약) */
+.userMenu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.userMenu button, .userMenu a {
+  display: flex;
+  align-items: center;
+  gap: 5px; 
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: inherit; /* [추가] 폰트 상속 */
+  text-decoration: none; 
+  color: #333; 
+}
+
+.userMenu button:hover,
+.userMenu a:hover {
+    color: #d9534f; /* 마우스 오버 효과 */
+}

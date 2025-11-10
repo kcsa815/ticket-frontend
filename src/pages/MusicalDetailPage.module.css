@@ -1,0 +1,101 @@
+.pageContainer{
+    padding:20px;
+}
+
+.loading, .error{
+    font-size: 1.5em;
+    text-align: center;
+    margin-top: 50px;
+}
+
+/* 상세 정보(상단) */
+.detailsContainer{
+    display: flex;
+    gap: 30px;  /* 이미지와 정보 사이 간격 */
+    border-bottom: 2px solid #eee;
+    padding-bottom: 30px;
+}
+
+.posterImage{
+    width: 300px;
+    height: 420px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.infoContainer{
+    flex: 1;  /*남은 공간 모두 차지*/
+}
+
+.title{
+    font-size: 2.5rem;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.description{
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+.metaInfo{
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+.metaInfo strong{
+    margin-right: 10px;
+}
+
+
+/* 회차 목록(하단) */
+
+.performanceSection{
+    margin-top:30px;
+}
+
+.performanceList{
+    list-style: none;
+    padding: 0;
+}
+
+.performanceItem{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    transition: background-color 0.2s;
+}
+
+.performanceItem:hover{
+    background-color: #f9f9f9;
+}
+
+.performanceInfo strong{
+    font-size: 1.1rem;
+    color:#333;
+}
+
+.performanceInfo span{
+    margin-left: 15px;
+    color : #666;
+}
+
+.bookButton{
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.bookButton:hover{
+    background-color: #c9302c;
+}

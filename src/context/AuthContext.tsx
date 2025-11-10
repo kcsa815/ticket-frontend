@@ -29,14 +29,14 @@ export function AuthProvider({children} : {children : ReactNode}){
         if(storedToken){
              setToken(storedToken);
              // axios 기본 헤더에도 즉시 설정
-            axios.defaults.headers.common['Authorization'] = 'Bearer ${storedToken}';
+            axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
         }       
     }, []);   // 앱(Provider)이 처음 마운트될 때 1회 실행
 
     // 로그인 함수 : 토큰을 받아 status와 localStorage에 저장
     const login = (newToken: string) =>{
         setToken(newToken);
-        axios.defaults.headers.common['Authorization'] = 'Bearer ${newToken}';
+        axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
         localStorage.setItem('token', newToken);   // 브라우저에 영구 저장
     };
 
