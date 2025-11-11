@@ -1,0 +1,137 @@
+/* --- 1. 공통 섹션 스타일 (기존 .content-section) --- */
+.section {
+  padding: 40px 0; /* 상하 여백 */
+  background: #fff;
+}
+
+.sectionTitle {
+  text-align: center;
+  font-size: 2rem; /* 32px */
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+/* --- 2. 그리드/리스트 컨테이너 --- */
+/* (기본) 4열 카드 그리드 (기존 HomePage 스타일) */
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* (수정) "랭킹" 섹션 스타일 (5열, flex 기반) */
+.gridContainer.ranking {
+  display: flex;
+  justify-content: space-between; /* 아이템들 사이에 공간 배분 */
+  flex-wrap: wrap; /* 화면이 작아지면 줄바꿈 */
+}
+
+/* (수정) "오픈 예정" 섹션 스타일 (3열, grid 기반) */
+.gridContainer.comingSoon {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px; /* 아이템 사이의 간격 */
+}
+
+/* --- 3. 카드 스타일 --- */
+
+/* (기본) 4열 카드 (기존 musicalCard 스타일) */
+.musicalCard {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden; 
+  text-decoration: none;
+  color: black;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.musicalCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+.posterImage {
+  width: 100%;
+  height: 300px; 
+  object-fit: cover;
+}
+.info {
+  padding: 15px;
+}
+.title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* (수정) "랭킹" 카드 스타일 (.ranking-item) */
+.musicalCard.ranking {
+  width: 18%; /* 5개 아이템을 한 줄에 배치 */
+  min-width: 150px;
+  text-align: center;
+  /* (나머지 스타일은 .musicalCard의 것을 상속받음) */
+}
+.posterImage.ranking {
+  height: auto; /* 랭킹은 원본 비율 유지 */
+  margin-bottom: 10px;
+}
+.info.ranking {
+  padding: 10px;
+}
+.title.ranking {
+  font-size: 16px;
+  white-space: normal; /* 랭킹은 줄바꿈 허용 */
+}
+
+
+/* (수정) "오픈 예정" 카드 스타일 (.coming-soon-item) */
+.musicalCard.comingSoon {
+  display: flex; /* 가로가 긴 직사각형 */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.posterImage.comingSoon {
+  width: 120px; /* 이미지 영역 너비 고정 */
+  height: 100%; /* 부모(.musicalCard) 높이 100% */
+  flex-shrink: 0;
+}
+.info.comingSoon {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 텍스트 내용 세로 중앙 정렬 */
+  flex-grow: 1; /* 남은 공간 다 차지 */
+}
+.title.comingSoon {
+  font-size: 18px;
+  margin-bottom: 12px;
+  max-width: 200px; 
+}
+/* (오픈 예정 DTO에 openDate가 없으므로 임시로 .title만 사용) */
+
+
+/* --- 4. "더보기" 버튼 --- */
+.viewAllContainer {
+  text-align: center;
+  margin-top: 30px;
+}
+.viewAllButton {
+  display: inline-flex; 
+  align-items: center;
+  gap: 5px; /* 아이콘과 텍스트 간격 */
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  border-radius: 20px;
+  color: #555;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+.viewAllButton:hover {
+  background: #f8f9fa;
+  border-color: #ccc;
+  color: #000;
+}   

@@ -7,8 +7,9 @@ import { useAuth } from "../../context/AuthContext";    //AuthContext경로 확�
 import styles from './Header.module.css';               //헤더 스타일 가져오기
 //react-icons 사용
 import { FiSearch } from "react-icons/fi";
-import { TbUser } from "react-icons/tb";
+import { BiUser } from "react-icons/bi";
 import { HiOutlineTicket } from "react-icons/hi";
+import { MdLogout } from "react-icons/md";
 
 function Header(){
     const {isLoggedIn, logout} = useAuth();     //AuthContext에서 로그인상태 가져오기
@@ -34,20 +35,20 @@ function Header(){
                 <div className={styles.userName}>
                     {!isLoggedIn ? (
                     //나중에 '로그인 페이지'를 만들면 <Link to="/login">으로 감싸기
-                    <button>
-                        <TbUser />로그인
-                    </button>
+                    <Link to="/login" className={styles.headerButton}> 
+                        <BiUser size={20} />
+                        <span style={{ marginLeft: '5px' }}>로그인</span>
+                    </Link>
                     ) : (
                         <button onClick={logout}>
-                            로그아웃
+                            <MdLogout />로그아웃
                         </button>
                     )}
 
                     {/* 2. 내 예약*/}
                     <Link to="/my-bookings">
-                        <button>
-                            <HiOutlineTicket />내 예약
-                        </button>
+                        <HiOutlineTicket  size={20} />
+                        <span style={{ marginLeft: '5px' }}>내 예약</span>
                     </Link>
                 </div>
             </div>

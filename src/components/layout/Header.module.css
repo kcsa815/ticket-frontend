@@ -67,18 +67,19 @@
   flex-shrink: 0; /* 아이콘 버튼이 찌그러지지 않도록 */
 }
 .searchBar button:hover {
-  color: #d9534f;
+  color: #764fd9;
 }
 
 /* 사용자 메뉴 (로그인/내 예약) */
-.userMenu {
+.userName, .userMenu {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
 }
 
-.userMenu button, .userMenu a {
+.userName button, .userMenu button, .userName a, .userMenu a {
+  text-decoration: none;
   display: flex;
   align-items: center;
   gap: 5px; 
@@ -91,7 +92,6 @@
   color: #333; 
 }
 
-.userMenu button:hover,
-.userMenu a:hover {
-    color: #d9534f; /* 마우스 오버 효과 */
+.userMenu a {
+  font-size: 20px;
 }

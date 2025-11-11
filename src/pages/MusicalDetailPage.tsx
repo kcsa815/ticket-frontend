@@ -1,150 +1,181 @@
-import React, {useState, useEffect} from "react";
-import axios from 'axios';
-import { useParams, Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import axios, { AxiosError } from 'axios';
+import { useParams, Link } from 'react-router-dom';
 import styles from './MusicalDetailPage.module.css';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import './CalendarCustom.css';
 
-// 1. 백엔드 DTO와 맞추는 타입 정의
-// GET  /api/musicals/{id} 응답 타입
-interface MusicalDetail{
-    musicalId :number;
-    title: string;
-    description : string;
-    posterImageUrl:string;
-    runningTime: number;
-    ageRating: string;
+// 1. (GET /api/musicals/{id} 응답 타입)
+interface MusicalDetail {
+  musicalId: number;
+  title: string;
+  description: string;
+  posterImageUrl: string;
+  runningTime: number;
+  ageRating: string;
 }
 
-// GET  /api/performances/musical/{id} 응답 타입
-interface PerformanceSimple{
-    performanceId: number;
-    performanceDate : string;      //날짜는 string으로 받아서 포맷팅
-    venueName: string;
+// 2. (GET /api/performances/musical/{id} 응답 타입)
+interface PerformanceSimple {
+  performanceId: number;
+  performanceDate: string; 
+  venueName: string;
 }
 
-interface ErrorResponse{
-    message: string;
+// 3. (에러 응답 타입)pageContainer
+interface ErrorResponse { 
+  message: string; 
 }
 
-//-----------------------------------------------
+const isSameDay = (dateA: Date, dateB: Date) => {
+  return dateA.getFullYear() === dateB.getFullYear() &&
+         dateA.getMonth() === dateB.getMonth() &&
+         dateA.getDate() === dateB.getDate();
+};
 
-//"상세" 페이지 컴포넌트
-function MusicalDetailPage(){
-    /*
-    1. URL의 파라미터 값(musicalId)을 가져옴
-        ex) /musical/1 이면 {musicalId: '1'}을 반환
-    */
-   const {musicalId} = useParams<{musicalId : string}>();
+function MusicalDetailPage() {
+  // --- (useState, useEffect 등 모든 로직은 위와 동일) ---
+  const { musicalId } = useParams<{ musicalId: string }>();
+  const [musical, setMusical] = useState<MusicalDetail | null>(null);
+  const [performances, setPerformances] = useState<PerformanceSimple[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-    // 2. API 결과를 저장할 State
-    const [musical, setMusical] = useState<MusicalDetail | null>(null);
-    const [performances, setPerformances] = useState<PerformanceSimple[]>([]);
+  useEffect(() => {
+    if (!musicalId) return;
 
-    //3. 로딩 및 에러 상태 관리
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+    // (1) API 호출 함수 정의 (내용 복구)
+    const fetchData = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        // (API 2개 동시 호출)
+        const musicalApiUrl = `http://localhost:8080/api/musicals/${musicalId}`;
+        const performanceApiUrl = `http://localhost:8080/api/performances/musical/${musicalId}`;
 
-    //4. 페이지가 로드될 때 API를 호출하는 로직
-    useEffect(() => {
-        if (!musicalId) return;   //musicalId가 없으면 아무것도 안함
+        const [musicalResponse, performanceResponse] = await Promise.all([
+          axios.get<MusicalDetail>(musicalApiUrl),
+          axios.get<PerformanceSimple[]>(performanceApiUrl)
+        ]);
 
-        //API 호출용 비동기 함수
-        const fetchData = async () =>{
-            setLoading(true);
-            setError('');
-            try {
-                //API 2개를 동시에 요청!!(Promise.all)
-                const musicalApiUrl = `http://localhost:8080/api/musicals/${musicalId}`;
-                const performanceApiUrl = `http://localhost:8080/api/performances/musical/${musicalId}`;
+        setMusical(musicalResponse.data);
+        setPerformances(performanceResponse.data);
 
-                const [musicalResponse, performanceResponse] = await Promise.all([
-                    axios.get<MusicalDetail>(musicalApiUrl),
-                    axios.get<PerformanceSimple[]>(performanceApiUrl)
-                ]);
-
-                //6. 성공 시 State에 데이터 저장
-                setMusical(musicalResponse.data);
-                setPerformances(performanceResponse.data);
-
-            } catch (err) {
-                console.error('데이터 조회 실패 : ', err);
-                if(axios.isAxiosError<ErrorResponse>(err) && err.response) {
-                    setError(err.response.data.message || '데이터를 불러오지 못했습니다.');
-                } else{
-                    setError('알 수 없는 오류가 발생했습니다.');
-                }
-            } finally{
-                //7. 성공/실패 여부와 관계 없이 로딩 종료
-                setLoading(false);
-            }
-        };
-
-            fetchData();    //함수 실행
-
-        }, [musicalId]);    //musicalId가 바뀔 때마다 이 useEffect를 다시 실행
-
-        // 8. 렌더링(JSX)
-
-        //8-1. 로딩 중일 때
-        if(loading){
-            return <div className={styles.loading}>데이터를 불러오는 중...</div>;
+      } catch (err) {
+        console.error('데이터 조회 실패:', err);
+        if (axios.isAxiosError<ErrorResponse>(err) && err.response) {
+          // (수정) 500 에러 대신, 백엔드 404 에러의 '진짜' 메시지를 표시
+          setError(err.response.data.message || '데이터를 불러오지 못했습니다.');
+        } else {
+          setError('알 수 없는 오류가 발생했습니다.');
         }
+      } finally {
+        setLoading(false); // (중요!) 성공/실패 시 로딩 종료
+      }
+    };
 
-        //8-2. 에러 발생 시
-        if(error){
-            return<div className={styles.error}>에러 : {error}</div>;
-        }
+    fetchData(); // (2) 함수 실행
+  }, [musicalId]);
 
-        //8-3. 데이터가 없을 때 (정상적이지만 데이터가 null)
-        if(!musical){
-            return <div className={styles.loading}>뮤지컬 정보를 찾을 수 없습니다.</div>;
-        }
+  
+  const filteredPerformances = performances.filter(perf => {
+    const performanceDate = new Date(perf.performanceDate);
+    return isSameDay(performanceDate, selectedDate);
+  });
+  
+  const onDateChange = (date: any) => {
+    if (date instanceof Date) {
+      setSelectedDate(date);
+    }
+  };
+  // --- (로직 끝) ---
 
-        //8-4. (성공) 데이터 렌더링
-        return(
-            <div className={styles.pageContainer}>
-                {/* 상단 - 뮤지컬 상세 정보 */}
-                <section className={styles.detailsContainer}>
-                    <img 
-                        src={`http://localhost:8080${musical.posterImageUrl}`}
-                        alt={musical.title}
-                        className={styles.posterImage}
-                    />
-                    <div className={styles.infoContainer}>
-                        <h2 className={styles.title}>{musical.title}</h2>
-                        <p className={styles.description}>{musical.description}</p>
-                        <div className={styles.metaInfo}>
-                            <p><strong>관람 시간 : </strong>{musical.runningTime}분</p>
-                            <p><strong>관람 등급 : </strong>{musical.ageRating}</p>
-                        </div>
-                    </div>
-                </section>
 
-                {/* 하단 - 공연 회차 목록 */}
-                <section className={styles.performanceSection}>
-                    <h3>공연 회차 선택</h3>
-                    <ul className={styles.performanceList}>
-                        {performances.length > 0 ? (
-                            performances.map((perf) => (
-                                <li key={perf.performanceId} className={styles.performanceItem}>
-                                    <div className={styles.performanceInfo}>
-                                        {/* 날짜 포맷팅 (YYYY-MM-DD HH:mm) */}
-                                        <strong>{new Date(perf.performanceDate).toLocaleString('ko-KR', {year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit'})}</strong>
-                                        <span>{perf.venueName}</span>
-                                    </div>
-                                    {/* 좌석페이지 / 링크만 걸어둔 상태 */}
-                                    <Link to={`/booking/${perf.performanceId}`} className={styles.bookButton}>
-                                        예매하기
-                                    </Link>
-                                </li>
-                            ))
-                        ) : (
-                            <li>예매 가능한 공연 회차가 없습니다.</li>
-                        )}
-                    </ul>
-                </section>
+  // --- (렌더링 JSX) ---
+  if (loading) return <div className={styles.loading}>데이터를 불러오는 중...</div>;
+  if (error) return <div className={styles.error}>에러: {error}</div>;
+  if (!musical) return null;
+
+  return (
+    // (1200px 중앙 정렬 래퍼)
+    <div className={`content-wrapper`}> 
+      <div className={styles.mainLayout}>
+        
+        {/* --- 2. 왼쪽 컬럼 (수정) --- */}
+        <div className={styles.leftColumn}>
+          
+          {/* (1) (신규) 제목을 .topInfoSection 밖으로 이동 */}
+          <h3 className={styles.title}>뮤지컬 &lt;{musical.title}&gt;</h3>
+
+          {/* 2-1. (상단) 포스터 + (나머지) 기본 정보 */}
+          <section className={styles.topInfoSection}>
+            <img 
+              src={`http://localhost:8080${musical.posterImageUrl}`} 
+              alt={musical.title} 
+              className={styles.posterImage} 
+            />
+            <div className={styles.metaInfo}>
+              
+              {/* (2) (수정) h2 제목은 위로 이동했으므로 삭제 */}
+              
+              <p><strong>관람 시간:</strong> {musical.runningTime}분</p>
+              <p><strong>관람 연령:</strong> {musical.ageRating}</p>
+              {/* (TODO) 등급별 가격 정보 */}
             </div>
-        );
+          </section>
 
+          {/* 2-2. (하단) 상세 정보 (스크롤) */}
+          <section className={styles.fullDescriptionSection}>
+            <h3>공연 상세 정보</h3>
+            <div className={styles.descriptionBox}>
+              <div dangerouslySetInnerHTML={{__html:musical.description}} />
+            </div>
+          </section>
+        </div>
+        
+        {/* --------------------------------- */}
+        {/* --- 3. 오른쪽 컬럼 (Req 3, 4) --- */}
+        {/* --------------------------------- */}
+        <div className={styles.rightColumn}>
+          <h3>공연 날짜 선택</h3>
+          <div className={styles.calendarContainer}>
+            <Calendar
+              onChange={onDateChange}
+              value={selectedDate}
+              formatDay={(locale, date) => date.getDate().toString()}
+            />
+          </div>
+
+          {/* 3-2. '필터링된' 회차 목록 */}
+          <section className={styles.performanceSection}>
+            <ul className={styles.performanceList}>
+              <li className={styles.listHeader}>
+                {selectedDate.toLocaleDateString('ko-KR')}
+              </li>
+              {filteredPerformances.length > 0 ? (
+                filteredPerformances.map((perf) => (
+                  <li key={perf.performanceId} className={styles.performanceItem}>
+                    <div className={styles.performanceInfo}>
+                      <strong>{new Date(perf.performanceDate).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</strong>
+                      <span>{perf.venueName}</span>
+                    </div>
+                    <Link to={`/booking/${perf.performanceId}`} className={styles.bookButton}>
+                      예매하기
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li>선택한 날짜에 예매 가능한 회차가 없습니다.</li>
+              )}
+            </ul>
+          </section>
+        </div> {/* (오른쪽 컬럼 끝) */}
+        
+      </div> {/* (메인 레이아웃 끝) */}
+    </div> /* (content-wrapper 끝) */
+  );
 }
 
 export default MusicalDetailPage;

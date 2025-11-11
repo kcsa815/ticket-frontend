@@ -1,0 +1,32 @@
+/* react-calendar 기본 스타일 덮어쓰기 */
+
+/* 1. 전체 캘린더 컨테이너: 너비 100%로 꽉 채우기 */
+.react-calendar {
+  width: 100%;
+  border: none; /* 부모(.calendarContainer)가 테두리를 그리므로 제거 */
+  font-family: inherit; /* 부모 폰트 상속 */
+}
+
+/* 2. 주말(일요일) 빨간색 제거 */
+.react-calendar__month-view__weekdays__weekday--weekend {
+  color: #000;
+}
+.react-calendar__month-view__days__day--weekend {
+  color: #000;
+}
+
+/* 3. "오늘" 날짜 스타일 */
+.react-calendar__tile--now {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+.react-calendar__tile--now:hover {
+  background: #e0e0e0;
+}
+
+/* 4. "선택된" 날짜 스타일 */
+.react-calendar__tile--active {
+  background: #8d3633 !important; /* (중요) 포인트 컬러 */
+  color: white !important;
+  border-radius: 4px;
+}

@@ -19,7 +19,7 @@ function MainBanner(){
     const settings = {
         dots : true,
         infinite : true,
-        speed : 2000,
+        speed : 1000,
         slidesToShow:1,
         slidesToScroll: 1,
         autoplay: true,
@@ -34,7 +34,7 @@ function MainBanner(){
                         <img
                             src={image.src}
                             alt={image.alt}
-                            className={styles.bannerImages}
+                            className={styles.bannerImage}
                         />
                     </div>
                 ))}
