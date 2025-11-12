@@ -1,7 +1,7 @@
 /* 1. [수정] 네비게이션 바 '배경' (100% 너비) */
 .navbar {
   width: 100%;
-  background-color: #ececf0;
+  background-color: #efefef;
   padding-top: 8px;
   padding-bottom: 8px;
   border-bottom: 1px solid #909090;

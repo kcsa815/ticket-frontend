@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios, { AxiosError } from 'axios';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import styles from './MusicalDetailPage.module.css';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import './CalendarCustom.css';
-
+import BookingPage from './BookingPage';
 // 1. (GET /api/musicals/{id} 응답 타입)
 interface MusicalDetail {
   musicalId: number;
@@ -42,6 +42,19 @@ function MusicalDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPerformanceId, setSelectedPerformanceId] = useState<number | null>(null);
+ 
+  //예매하기 버튼 클릭 핸들러
+  const handleOpenModal = (performanceId : number) =>{
+    setSelectedPerformanceId(performanceId); //클릭한 공연 아이디 저장
+    setIsModalOpen(true);  //모달 열기
+  }
+
+  const handleCloseModal = () =>{
+    setIsModalOpen(false); // 모달 닫기
+    setSelectedPerformanceId(null);
+  }
 
   useEffect(() => {
     if (!musicalId) return;
@@ -161,9 +174,12 @@ function MusicalDetailPage() {
                       <strong>{new Date(perf.performanceDate).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}</strong>
                       <span>{perf.venueName}</span>
                     </div>
-                    <Link to={`/booking/${perf.performanceId}`} className={styles.bookButton}>
+                    <button
+                      onClick={() => handleOpenModal(perf.performanceId)}
+                      className={styles.bookButton}
+                    >
                       예매하기
-                    </Link>
+                    </button>
                   </li>
                 ))
               ) : (
@@ -172,8 +188,15 @@ function MusicalDetailPage() {
             </ul>
           </section>
         </div> {/* (오른쪽 컬럼 끝) */}
-        
       </div> {/* (메인 레이아웃 끝) */}
+
+      {/* 모달 렌더링 */}
+      <BookingPage 
+        isOpen = {isModalOpen}
+        onClose={handleCloseModal}
+        performanceId={selectedPerformanceId}
+      />
+
     </div> /* (content-wrapper 끝) */
   );
 }

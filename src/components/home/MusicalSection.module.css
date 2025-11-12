@@ -22,7 +22,6 @@
 /* (수정) "랭킹" 섹션 스타일 (5열, flex 기반) */
 .gridContainer.ranking {
   display: flex;
-  justify-content: space-between; /* 아이템들 사이에 공간 배분 */
   flex-wrap: wrap; /* 화면이 작아지면 줄바꿈 */
 }
 

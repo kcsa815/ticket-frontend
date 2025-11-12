@@ -1,0 +1,91 @@
+.pageContainer {
+  padding: 20px;
+}
+
+.loading, .error {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+}
+.subTitle {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+/* 좌석 배치판 (Grid) */
+.seatGrid {
+  display: grid;
+  /* (임시) 10열 그리드. */
+  grid-template-columns: repeat(10, 1fr);
+  gap: 8px;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  background: #f4f4f4;
+  border-radius: 8px;
+}
+
+/* 개별 좌석 버튼 */
+.seat {
+  background-color: #fff;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  padding: 5px 0;
+  text-align: center;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.seat:hover {
+  background-color: #eee;
+}
+
+/* 선택된 좌석 */
+.seat.selected {
+  background-color: #d9534f;
+  color: white;
+  border-color: #c9302c;
+  font-weight: bold;
+}
+
+/* 이미 예약된 좌석 */
+.seat.reserved {
+  background-color: #bbb;
+  color: #777;
+  border-color: #aaa;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* 예매 버튼 컨테이너 */
+.bookingActions {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.bookButton {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.bookButton:hover {
+  background-color: #c9302c;
+}
+.bookButton:disabled {
+  background-color: #aaa; /* (신규) 비활성화 버튼 */
+  cursor: not-allowed;
+}

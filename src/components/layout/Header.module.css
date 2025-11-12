@@ -92,6 +92,19 @@
   color: #333; 
 }
 
+.adminButton{
+  text-decoration: none;
+  color : #ffffff;
+  background-color: #bd0000;
+  padding: 8px 12px;
+  border-radius: 15px;
+  border : 2px solid #720000;
+}
+
+.adminButton :hover{
+  color : #00ff2f;
+}
+
 .userMenu a {
   font-size: 20px;
 }
