@@ -14,6 +14,8 @@ interface MusicalDetail {
   posterImageUrl: string;
   runningTime: number;
   ageRating: string;
+  minPrice : number | null;
+  maxPrice : number | null;
 }
 
 // 2. (GET /api/performances/musical/{id} 응답 타입)
@@ -129,19 +131,27 @@ function MusicalDetailPage() {
               alt={musical.title} 
               className={styles.posterImage} 
             />
-            <div className={styles.metaInfo}>
-              
-              {/* (2) (수정) h2 제목은 위로 이동했으므로 삭제 */}
-              
-              <p><strong>관람 시간:</strong> {musical.runningTime}분</p>
-              <p><strong>관람 연령:</strong> {musical.ageRating}</p>
-              {/* (TODO) 등급별 가격 정보 */}
+            <div className={styles.metaInfo}>    
+              {performances.length >0 && (
+                <p><strong>공연장소:</strong> {performances[0].venueName}</p>
+              )}
+              <p><strong>공연시간:</strong> {musical.runningTime}분(인터미션 20분 포함)</p>
+              <p><strong>관람연령:</strong> {musical.ageRating}세 이상 관람 가능</p>
+              {musical.minPrice && musical.maxPrice ? (
+                <p>
+                  <strong>가격: </strong> {musical.minPrice.toLocaleString()}원 ~ {musical.maxPrice.toLocaleString()}원
+                </p>
+              ) : (
+                <p>
+                  <strong>가격: </strong> (회차 선택)
+                </p>
+              )}
             </div>
           </section>
 
           {/* 2-2. (하단) 상세 정보 (스크롤) */}
           <section className={styles.fullDescriptionSection}>
-            <h3>공연 상세 정보</h3>
+            <h4>공연 상세 정보</h4>
             <div className={styles.descriptionBox}>
               <div dangerouslySetInnerHTML={{__html:musical.description}} />
             </div>

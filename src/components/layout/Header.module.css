@@ -38,7 +38,7 @@
 .searchBar {
   display: flex;
   height: 40px;
-  width: 350px;
+  width: 300px;
   border: 1px solid #616162;
   border-radius: 20px;
   overflow: hidden;
@@ -98,7 +98,6 @@
   background-color: #bd0000;
   padding: 8px 12px;
   border-radius: 15px;
-  border : 2px solid #720000;
 }
 
 .adminButton :hover{

@@ -1,9 +1,8 @@
 /**
  * 부킹페이지(예매하기) -> 결제창(아직 구현 안함 / 결제 완료) ->했을 때 나오는 내가 예약 페이지 
  */
-import React, { useState, useEffect } from 'react';
-import axios, {AxiosError} from 'axios';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import styles from './MyBookingsPage.module.css'; // 방금 만든 CSS
 import { useAuth } from '../context/AuthContext'; // (토큰 확인용)
 

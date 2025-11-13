@@ -60,3 +60,30 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+
+/* 관리자 수정, 삭제 버튼 */
+.adminButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.adminButtons button {
+  width: 48%; /* 버튼 2개가 반씩 나눠가짐 */
+  padding: 8px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #f9f9f9;
+}
+.adminButtons button:hover {
+  background: #eee;
+}
+.adminButtons button:last-child {
+  background: #ffe0e0; /* (삭제 버튼은 붉은색) */
+  border-color: #fdd;
+}
+.adminButtons button:last-child:hover {
+  background: #ffe0e0;
+}

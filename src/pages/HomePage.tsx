@@ -1,5 +1,5 @@
-import MainBanner from '../components/home/MainBanner';
-import MusicalSection from '../components/home/MusicalSection';
+import MainBanner from "../components/home/MainBanner";
+import MusicalSection from "../components/home/MusicalSection";
 
 function HomePage() {
   return (
@@ -9,24 +9,24 @@ function HomePage() {
 
       {/* 2. 뮤지컬 섹션 (1400px 중앙 정렬) */}
       <div className="content-wrapper">
-        <MusicalSection 
-          title="랭킹" 
-          apiUrl="/api/musicals?sort=ranking" 
-          layoutType="ranking"  /* 👈 랭킹 스타일 적용 */
+        <MusicalSection
+          title="랭킹"
+          apiUrl="/api/musicals?section=ranking"
+          layoutType="ranking"
           viewAllLink="/rankings"
         />
-        
-        <MusicalSection 
-          title="오픈 예정" 
-          apiUrl="/api/musicals?status=upcoming" 
-          layoutType="comingSoon" /* 👈 오픈 예정 스타일 적용 */
+
+        <MusicalSection
+          title="오픈 예정"
+          apiUrl="/api/musicals?section=comingSoon"
+          layoutType="comingSoon"
           viewAllLink="/coming-soon"
         />
-        
-        <MusicalSection 
-          title="할인 중" 
-          apiUrl="/api/musicals?status=sale" 
-          layoutType="default"  /* 👈 기본 4열 스타일 적용 */
+
+        <MusicalSection
+          title="지금 할인 중!"
+          apiUrl="/api/musicals?section=sale"
+          layoutType="default"
           viewAllLink="/sales"
         />
       </div>

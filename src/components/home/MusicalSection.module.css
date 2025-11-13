@@ -110,6 +110,33 @@
 }
 /* (오픈 예정 DTO에 openDate가 없으므로 임시로 .title만 사용) */
 
+/* 관리자 수정, 삭제 버튼 */
+.adminButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.adminButtons button {
+  width: 48%; /* 버튼 2개가 반씩 나눠가짐 */
+  padding: 8px;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin : 5px;
+  cursor: pointer;
+  background: #f9f9f9;
+}
+.adminButtons button:hover {
+  background: #eee;
+}
+.adminButtons button:last-child {
+  background: #fde2e2; /* (삭제 버튼은 붉은색) */
+  border-color: #fdd;
+}
+.adminButtons button:last-child:hover {
+  background: #ffe0e0;
+}
+
 
 /* --- 4. "더보기" 버튼 --- */
 .viewAllContainer {
@@ -134,3 +161,4 @@
   border-color: #ccc;
   color: #000;
 }   
+

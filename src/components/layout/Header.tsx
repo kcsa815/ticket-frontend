@@ -35,10 +35,16 @@ function Header(){
                 </div>
 
                 {/* Admin일경우 관리자 버튼 표시 */}
-                {isLoggedIn && userRole ==='ROLE_ADMIN' && (
-                    <Link to="/admin/add-musical" className={styles.adminButton}>
-                        <GrUserAdmin />관리자
-                    </Link>
+                {isLoggedIn && userRole === 'ROLE_ADMIN' && (
+                    <>
+                        <Link to="/admin/add-musical" className={styles.adminButton}>
+                            <GrUserAdmin />공연 등록
+                        </Link>
+
+                        <Link to="/admin/add-performance" className={styles.adminButton}>
+                            <GrUserAdmin />공연 회차 등록
+                        </Link>
+                    </>
                 )}
 
 

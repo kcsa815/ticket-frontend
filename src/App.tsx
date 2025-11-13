@@ -8,12 +8,14 @@ import LoginPage from './pages/LoginPage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import AdminPage from './pages/AdminPage';
 import MusicalListPage from './pages/MusicalListPage';
+import AdminPerformancePage from './pages/AdminPerformancePage';
 // (레이아웃 및 보호막 임포트)
 import Header from './components/layout/Header';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import './App.css'; // (전역 CSS)
+import AdminMusicalEditPage from './pages/AdminMusicalEditPage';
 
 // (준비중 페이지)
 const VenuesPage = () => <div><h2>공연장 목록 페이지(준비중)</h2></div>;
@@ -61,6 +63,25 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path='/admin/add-performance'  //공연 회차 등록
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminPerformancePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route 
+            path='/admin/musical/edit/:musicalId'
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminMusicalEditPage />
+              </ProtectedRoute>
+            }
+          />
+
           
         </Routes>
         
