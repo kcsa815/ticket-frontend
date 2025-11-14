@@ -130,7 +130,7 @@ function AdminPage() {
             >
               <option value="DEFAULT">일반</option>
               <option value="RANKING">랭킹</option>
-              <option value="COMINGSOON">오픈예정</option>
+              <option value="UPCOMING">오픈예정</option>
               <option value="SALE">할인 중</option>
             </select>
         </div>

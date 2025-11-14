@@ -11,8 +11,6 @@ Modal.setAppElement('#root');   //모달이 앱의 루트 요소를 알도록 �
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    {/* 2. <App />을 <BrowserRouter>로 감싸고,
-           <BrowserRouter>를 <AuthProvider>로 감싸야 합니다. */}
     <AuthProvider>
       <BrowserRouter>
         <App />

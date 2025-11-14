@@ -92,11 +92,8 @@
 .rightColumn {
   flex: 1.5; /* 2의 비율을 차지 */
   width: 0; /* flex-grow 계산을 위해 */
-  
-  /* (추가) 스크롤 시 캘린더가 따라오도록 (선택 사항) */
-  position: sticky;
-  top: 100px; /* (Header 높이만큼 띄우기) */
-  height: fit-content;
+  position: relative;
+  z-index: 1;
 }
 
 .rightColumn h3 {
@@ -106,12 +103,17 @@
 
 .calendarContainer {
   border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden; /* 캘린더 모서리 */
+  position : relative;
+  z-index: 5;
 }
 
 .performanceSection {
   margin-top: 20px;
+  position: relative;
+  z-index: 10;
+  background: #fff;
 }
 .performanceSection h4 {
   font-size: 1.1rem;
@@ -125,32 +127,35 @@
   overflow-y: auto;
   border: 1px solid #ddd;
   border-radius: 5px;
+  position: relative;
+  z-index: 0;
+  border-radius: 12px;
 }
 
-.listHeader {
+.listHeader { /*선택된 날짜*/
   background-color: #f8f8f8; /* 헤더 배경색 */
   padding: 10px 15px;
   font-weight: bold;
-  color: #333;
   border-bottom: 1px solid #ddd;
-  /* (스크롤 시 상단에 고정 - 선택 사항) */
-  position: sticky; 
-  top: 0;
 }
 
-.performanceItem {
+.performanceItem {    /*회차 아이템(li)*/
   display: block; 
   padding: 15px;
-  /* border: 1px solid #ddd; [삭제] */
-  border-bottom: 1px solid #eee; /* [수정] 구분선으로 변경 */
-  margin: 0; /* [수정] */
-  border-radius: 0; /* [수정] */
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
 }
 /* (마지막 아이템의 하단 구분선 제거) */
 .performanceItem:last-child {
   border-bottom: none;
 }
 .performanceItem:hover { background-color: #f9f9f9; }
+
+.selectedPerf{
+  background-color: #fff4f4 !important;
+  border-left: 3px solid #d9534f;
+  padding-left: 12px;
+}
 
 /*  "회차가 없습니다" 메시지 스타일 */
 .noItem {
@@ -166,13 +171,22 @@
   margin-left: 15px; color: #666;
 }
 
+.bookingActions{
+  margin-top: 15px;
+}
 .bookButton {
   display: block;
   width: 100%;
+  height: 50px;
   text-align: center;
   margin-top: 10px;
-  background-color: #871f1b; color: white; border: none;
+  background-color: #93211d; color: white; border: none;
   padding: 10px 15px; border-radius: 5px; cursor: pointer;
   text-decoration: none; font-weight: bold;
+  border-radius: 12px;
 }
 .bookButton:hover { background-color: #771410; }
+.bookButton:disabled{ /*비활성화 시 스타일*/
+  background-color: #aaa;
+  cursor: not-allowed;
+}

@@ -23,7 +23,6 @@ function MusicalListPage() {
   const { userRole } = useAuth(); 
 
   useEffect(() => {
-    // --- 👇 [핵심 수정!] URL에 맞는 API 주소 생성 ---
     let apiUrl = 'http://localhost:8080/api/musicals'; // (기본 = 전체 목록)
     let pageTitle = '전체 뮤지컬';
 
@@ -35,7 +34,7 @@ function MusicalListPage() {
         break;
       case '/coming-soon':
         pageTitle = '오픈 예정';
-        apiUrl += '?section=coming-soon';
+        apiUrl += '?section=upcoming';
         break;
       case '/sales':
         pageTitle = '할인중';
@@ -45,15 +44,12 @@ function MusicalListPage() {
         pageTitle = '뮤지컬 목록';
     }
     setTitle(pageTitle);
-    // --- 👆 ---
 
     const fetchMusicals = async () => {
       try {
-        // [수정!] 하드코딩된 주소 대신, 'apiUrl' 변수 사용
         const response = await axios.get(apiUrl); 
         
-        // [수정!] .slice() 제거 (전체 목록)
-        setMusicals(response.data); 
+        setMusicals(response.data); //전체 목록
       } catch (err) {
         console.error(`${title} 목록 조회 실패`, err);
       }
@@ -62,7 +58,6 @@ function MusicalListPage() {
     fetchMusicals();
   }, [location.pathname, title]); // (의존성 배열 수정)
 
-  // --- (수정/삭제 핸들러 - HomePage에서 복사) ---
   const handleDelete = async (e: React.MouseEvent, musicalId: number) => {
     e.preventDefault(); 
     if (window.confirm("정말 이 뮤지컬을 삭제하시겠습니까?")) {
@@ -80,7 +75,6 @@ function MusicalListPage() {
     e.preventDefault(); 
     navigate(`/admin/musical/edit/${musicalId}`);
   };
-  // --- 👆 ---
 
   return (
     <div className={`content-wrapper ${styles.pageContainer}`}>

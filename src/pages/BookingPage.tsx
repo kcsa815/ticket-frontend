@@ -1,21 +1,19 @@
-/* 뮤지컬 디테일 페이지(상세페이지) 에서 날짜선택(공연회차 선택) 후 '예매하기'버튼을 클릭했을 때 넘어가는
-  좌석선택 + 예매( ->결제창으로 넘어감) 창!!!!!
-   */
-
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react'; // 👈 [수정!] (Children 제거)
 import axios, { AxiosError } from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styles from './BookingPage.module.css';
 import Modal from 'react-modal';
+import Draggable from 'react-draggable';
 
-// (타입 정의)
+// --- (타입 정의 - xCoord, yCoord 포함) ---
 interface PerformanceSeat {
   performanceSeatId: number;
   seatNumber: string;
   seatGrade: string;
   price: number;
   isReserved: boolean;
+  xCoord: number;
+  yCoord: number;
 }
 interface PerformanceDetail {
   performanceId: number;
@@ -24,96 +22,126 @@ interface PerformanceDetail {
   performanceDate: string;
   seats: PerformanceSeat[];
 }
-interface ErrorResponse { 
-  message: string; 
+interface ErrorResponse {
+  message: string;
+}
+// ------------------------------------
+
+interface BookingPageProps {
+  isOpen: boolean;
+  onClose: () => void;
+  performanceId: number | null;
 }
 
-interface BookingPageProps{
-  isOpen: boolean; //모달이 이미 열려있는지 여부
-  onClose:() => void //모달을 닫는 함수
-  performanceId : number | null;   //예매할 공연 아이디
+/**
+ * 드래그 가능한 모달 Wrapper
+ */
+const DraggableModal = (props: any) =>{
+  const nodeRef = useRef(null);
+  return(
+    <Draggable handle=".dragHandle" nodeRef={nodeRef}>
+      <div ref={nodeRef}>{props.children}</div>
+    </Draggable>
+  )
 }
 
-const customModalStyles: Modal.Styles ={
-  //1. 뒷배경(오버레이)
+const customModalStyles: Modal.Styles = {
+  // 1. 뒷 배경 (오버레이)
   overlay: {
-    backgroundColor:'rgba(0, 0, 0, 0.75)',
-    display: 'flex',
-    alignItems: 'center', 
-    justifyContent: 'center', 
-    zIndex: 2000
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    display: 'flex', // 👈 (필수!) 팝업을 중앙 정렬
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 2000,
   },
-  //2. 모달 창 본체
-  content : {
-    position: 'relative',
-    inset: 'auto',
-    
-    width: '90%',
-    maxWidth: '900px',
-    maxHeight: '90vh',
-    overflowY: 'auto',
-    
-    background: '#fff',
-    borderRadius: '8px',
-    padding: '0',
-    boxShadow: '0 5px 15px rgba(0,0,0,0.5)'
-  }
+  // 2. 모달 창 본체 (팝업)
+  content: {
+    position: 'relative', // 👈 (필수!)
+    inset: 'auto', // 👈 (필수!)
+    padding: '0', // 👈 (필수!) 패딩 제거
+    border: 'none',
+    background: 'none',
+    width: 'auto', // (너비는 Draggable이 제어)
+    overflow: 'visible', // (Draggable이 보이도록)
+  },
 };
 
-function BookingPage({isOpen, onClose, performanceId}: BookingPageProps) {
+function BookingPage({ isOpen, onClose, performanceId }: BookingPageProps) {
   const navigate = useNavigate();
-
-  const [performance, setPerformance] = useState<PerformanceDetail | null>(null);
+  const [performance, setPerformance] = useState<PerformanceDetail | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [selectedSeatIds, setSelectedSeatIds] = useState<Set<number>>(new Set());
-  const [isBookingLoading, setIsBookingLoading] = useState(false);  // API 요청 중복 방지용 state
+  const [error, setError] = useState("");
+  const [selectedSeatIds, setSelectedSeatIds] = useState<Set<number>>(
+    new Set()
+  );
+  const [isBookingLoading, setIsBookingLoading] = useState(false);
+  const nodeRef = useRef(null);
 
-  // (API 호출 로직)
+  // (useEffect API 호출 - 동일)
   useEffect(() => {
-    if (!isOpen || !performanceId){ //모달이 닫히거나, 아이디가 없으면 api호출 안함.
-      setLoading(false); //로딩 중지
+    // (1) 모달이 열렸고, ID가 정상적으로 들어왔을 때만 API 호출
+    if (isOpen && performanceId) {
+      
+      const fetchPerformanceDetails = async () => {
+        setLoading(true); // (API 호출 '직전'에 로딩 시작)
+        setError('');
+        setSelectedSeatIds(new Set()); 
+        
+        try {
+          const response = await axios.get<PerformanceDetail>(
+            `http://localhost:8080/api/performances/${performanceId}`
+          );
+          setPerformance(response.data);
+        } catch (err) {
+          // (에러 처리)
+          if (axios.isAxiosError<ErrorResponse>(err) && err.response) {
+            setError(err.response.data.message || '데이터를 불러오지 못했습니다.');
+          } else {
+            setError('알 수 없는 오류가 발생했습니다.');
+          }
+        } finally {
+          setLoading(false); // (API 호출 '완료' 시 로딩 종료)
+        }
+      };
+
+      fetchPerformanceDetails();
+    } 
+    // (2) 모달이 닫힐 때 (isOpen: false)
+    else if (!isOpen) {
+      // (모든 상태를 깨끗하게 초기화)
+      setLoading(false);
+      setError('');
+      setPerformance(null);
+      setSelectedSeatIds(new Set());
+    }
+  }, [isOpen, performanceId]); // (isOpen 또는 performanceId가 '바뀔 때마다' 실행)
+
+  // (6) (핵심!) 좌석 클릭 핸들러
+  const handleSeatClick = (seat: PerformanceSeat) => {
+    // 6-1. 이미 예약된 좌석이거나, 현재 예매 API가 실행 중이면 클릭 무시
+    if (seat.isReserved || isBookingLoading) {
       return;
     }
 
-    const fetchPerformanceDetails = async () => {
-      setLoading(true);
-      setError('');
-      //모달이 열릴 때마다 좌석 초기화
-      setSelectedSeatIds(new Set());
-      try {
-        const response = await axios.get<PerformanceDetail>(
-          `http://localhost:8080/api/performances/${performanceId}`
-        );
-        setPerformance(response.data);
-      } catch (err) {
-        // (에러 처리)
-        if (axios.isAxiosError<ErrorResponse>(err) && err.response) {
-          setError(err.response.data.message || '데이터를 불러오지 못했습니다.');
-        } else {
-          setError('알 수 없는 오류가 발생했습니다.');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchPerformanceDetails();
-  }, [isOpen, performanceId]);
-
-  // (좌석 클릭 핸들러)
-  const handleSeatClick = (seat: PerformanceSeat) => {
-    if (seat.isReserved || isBookingLoading) return; // (수정) 예매 중 클릭 방지
-
+    // 6-2. Set 자료구조를 복사 (React 불변성)
     const newSelectedIds = new Set(selectedSeatIds);
+
+    // 6-3. 이미 선택된 좌석인지 확인
     if (newSelectedIds.has(seat.performanceSeatId)) {
+      // 이미 선택됨 -> 선택 해제 (Set에서 제거)
       newSelectedIds.delete(seat.performanceSeatId);
     } else {
+      // 선택 안 됨 -> 선택 (Set에 추가)
       newSelectedIds.add(seat.performanceSeatId);
     }
+
+    // 6-4. state 갱신 -> React가 화면을 다시 그림
     setSelectedSeatIds(newSelectedIds);
   };
-  
-  // --- [예매하기] 버튼 핸들러 ---
+
+  // (7) (핵심!) [예매하기] 버튼 핸들러 (API 연동)
   const handleBookingSubmit = async () => {
     if (selectedSeatIds.size === 0) {
       alert("좌석을 하나 이상 선택해주세요.");
@@ -123,91 +151,204 @@ function BookingPage({isOpen, onClose, performanceId}: BookingPageProps) {
     // (1) 로딩 상태 활성화 (중복 클릭 방지)
     setIsBookingLoading(true);
     setError(''); // 이전 에러 초기화
-    const seatIdsArray = Array.from(selectedSeatIds);   // (2) Set을 배열로 변환
+
+    // (2) Set을 배열로 변환
+    const seatIdsArray = Array.from(selectedSeatIds);
 
     try {
-      // (3) (핵심!) 백엔드 예매 API 호출
+      // (3) 백엔드 예매 API 호출
       // (AuthContext가 axios 기본 헤더에 토큰을 넣어주고 있음)
-     await axios.post('http://localhost:8080/api/bookings', {
+      const response = await axios.post(
+        'http://localhost:8080/api/bookings', 
+        {
           performanceSeatIds: seatIdsArray // BookingReqDto 형식
-        });
+        }
+      );
 
       // (4) 예매 성공!
+      console.log("예매 성공:", response.data);
       alert("예매가 성공적으로 완료되었습니다!");
-      onClose();  //모달 닫기
-      navigate('/my-bookings')    // (5) 예매 내역 페이지로 이동
+      
+      // (5) 모달 닫기 및 예매 내역 페이지로 이동
+      onClose(); 
+      navigate('/my-bookings');
 
     } catch (err) {
       // (6) 예매 실패 (동시성 문제, DB 오류 등)
       console.error('예매 실패:', err);
       if (axios.isAxiosError<ErrorResponse>(err) && err.response) {
-        // (중요!) 백엔드 6단계에서 만든 에러 메시지 표시
+        // (백엔드 6단계에서 만든 에러 메시지 표시)
         // 예: "이미 예약된 좌석입니다." (SEAT_ALREADY_RESERVED)
         alert(`예매 실패: ${err.response.data.message}`);
       } else {
         alert('예매 중 알 수 없는 오류가 발생했습니다.');
-      }  
-      setIsBookingLoading(false);      // (7) 로딩 상태 해제
+      }
+      
+      // (7) 로딩 상태 해제 (실패 시에만)
+      setIsBookingLoading(false);
     }
   };
 
-  // 렌더링 : <Modal> 컴포넌트로 감싸기
-  return(
+  // --- [ Req 3: 잔여석/가격 계산] ---
+  // (useMemo: performance state가 바뀔 때만 1번 재계산)
+  const seatInfo = useMemo(() => {
+    if (!performance) return { counts: [], prices: [] };
+
+    // JS의 Map을 사용하여 등급별로 집계
+    const counts = new Map<string, number>(); // 잔여석
+    const prices = new Map<string, number>(); // 등급별 가격
+
+    for (const seat of performance.seats) {
+      // (1) 가격 설정
+      if (!prices.has(seat.seatGrade)) {
+        prices.set(seat.seatGrade, seat.price);
+      }
+      // (2) 잔여석 집계
+      if (!seat.isReserved) {
+        counts.set(seat.seatGrade, (counts.get(seat.seatGrade) || 0) + 1);
+      }
+    }
+    // Map을 [key, value] 배열로 변환
+    return {
+      counts: Array.from(counts.entries()),
+      prices: Array.from(prices.entries()),
+    };
+  }, [performance]);
+
+  // --- 3: 선택 좌석 정보 계산] ---
+  const selectedSeatsDetails = useMemo(() => {
+    if (!performance) return [];
+    return performance.seats.filter((seat) =>
+      selectedSeatIds.has(seat.performanceSeatId)
+    );
+  }, [selectedSeatIds, performance]);
+
+  // --- 렌더링: <Draggable> 및 새 JSX 구조 적용 ---
+  return (
     <Modal
-      isOpen={isOpen}             //부모(MusicalDetailPage)가 제어
-      onRequestClose={onClose}    //ESC, 배경 클릭시 닫힘
-      style={customModalStyles}   //위에서 정의한 모달 스타일 사용
+      isOpen={isOpen}
+      onRequestClose={onClose}
+      style={customModalStyles}
     >
-        {/* 닫기 버튼 */}
-        <div className={styles.pageContainer}> 
-          <button onClick={onClose} style={{float:'right', background:'none', border:'none', fontSize:'1.5em', cursor:'pointer'}}>
-            &times;
-          </button>
+      {/* (1) Draggable이 모달 컨텐츠 전체를 감쌈 */}
+      <Draggable handle=".dragHandle" nodeRef={nodeRef}>
+        
+        {/* (2) ref를 Draggable의 유일한 자식 div에 연결 */}
+        <div className={styles.modalContent} ref={nodeRef}>
+          
+          {loading ? (
+            <div className={styles.loading}>좌석 맵을 불러오는 중...</div>
+          ) : error ? (
+            <div className={styles.error}>에러: {error}</div>
+          ) : performance ? (
+            <>
+              {/* (상단 바 - 드래그 핸들) */}
+              <div className={`${styles.topBar} dragHandle`}>
+                <div className={styles.topBarTitle}>좌석선택</div>
+                <div className={styles.topBarInfo}>
+                  <h3>뮤지컬 &lt;{performance.musicalTitle}&gt;</h3>
+                  <p>
+                    {new Date(performance.performanceDate).toLocaleString('ko-KR')}
+                    ({performance.venueName})
+                  </p>
+                  <button onClick={onClose} style={{ position: 'absolute', top: '10px', right: '15px', background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}>
+                    &times;
+                  </button>
+                </div>
+              </div>
 
-        {/* 렌더링 로직 */}
-        {loading ?(
-          <div className={styles.loading}>좌석 맵을 불러오는 중...</div>
-        ) : error ?(
-          <div className={styles.error}>에러: {error}</div>
-        ) : performance ?(
-          <>
-          <h2 className={styles.title}>뮤지컬 &lt;{performance.musicalTitle}&gt;</h2>
-          <p className={styles.subTitle}>
-          {new Date(performance.performanceDate).toLocaleString('ko-KR')} ({performance.venueName})
-        </p>
+              {/* (중단 컨텐츠) */}
+              <div className={styles.mainContent}>
+                
+                {/* (왼쪽 좌석 맵) */}
+                <div className={styles.leftContent}>
+                  <div className={styles.seatMapContainer}>
+                    {performance.seats.map((seat) => {
+                      const isSelected = selectedSeatIds.has(seat.performanceSeatId);
+                      const seatClass = `${styles.seat} ${styles[seat.seatGrade]} ${seat.isReserved ? styles.reserved : ''} ${isSelected ? styles.selected : ''}`;
+                      
+                      return (
+                        <button
+                          // --- 👇 [수정!] key 오타 수정 ---
+                          key={seat.performanceSeatId} 
+                          // --- 👆 ---
+                          className={seatClass}
+                          onClick={() => handleSeatClick(seat)}
+                          disabled={seat.isReserved || isBookingLoading}
+                          style={{
+                            left: `${seat.xCoord}px`,
+                            top: `${seat.yCoord}px`,
+                          }}
+                        >
+                          {seat.seatNumber}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
-        <div className={styles.seatGrid}>
-          {performance.seats.map((seat) => {
-            const isSelected = selectedSeatIds.has(seat.performanceSeatId);
-            const seatClass = `${styles.seat} ${seat.isReserved ? styles.reserved : ''} ${isSelected ? styles.selected : ''}`;
+                {/* (오른쪽 정보란) */}
+                <div className={styles.rightContent}>
+                  {/* (좌석 등급 / 잔여석) */}
+                  <div className={styles.seatInfoBox}>
+                    <h4>좌석등급 / 잔여석</h4>
+                    {seatInfo.prices.map(([grade, price]) => (
+                      <div key={grade} className={styles.gradeInfo}>
+                        <span>
+                          {grade}석{" "}
+                          <span className={styles.count}>
+                            (
+                            {seatInfo.counts.find(([g]) => g === grade)?.[1] ||
+                              0}
+                            석)
+                          </span>
+                        </span>
+                        <span className={styles.price}>
+                          {price.toLocaleString()}원
+                        </span>
+                      </div>
+                    ))}
+                  </div>
 
-            return (
-              <button
-                key={seat.performanceSeatId}
-                className={seatClass}
-                onClick={() => handleSeatClick(seat)}
-                disabled={seat.isReserved || isBookingLoading} // (수정)
-              >
-                {seat.seatNumber}
-              </button>
-            );
-          })}
+                  {/* (선택한 좌석) */}
+                  <div className={styles.selectedSeatsBox}>
+                    <h4>선택 좌석</h4>
+                    <ul className={styles.selectedList}>
+                      {selectedSeatsDetails.length > 0 ? (
+                        selectedSeatsDetails.map((seat) => (
+                          <li key={seat.performanceSeatId}>
+                            {seat.seatNumber} ({seat.seatGrade} /{" "}
+                            {seat.price.toLocaleString()}원)
+                          </li>
+                        ))
+                      ) : (
+                        <li style={{ background: "none" }}>
+                          좌석을 선택해 주세요.
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+
+                  {/* (예매하기 버튼) */}
+                  <div className={styles.bookingActions}>
+                    <button
+                      className={styles.bookButton}
+                      onClick={handleBookingSubmit}
+                      disabled={
+                        isBookingLoading || selectedSeatsDetails.length === 0
+                      }
+                    >
+                      {isBookingLoading
+                        ? "예매 처리 중..."
+                        : `예매하기 (${selectedSeatsDetails.length}석)`}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : null}
         </div>
-
-        {/* 예매하기 버튼 */}
-        <div className={styles.bookingActions}>
-          <p>선택된 좌석 수: {selectedSeatIds.size}개</p>
-          <button 
-            className={styles.bookButton} 
-            onClick={handleBookingSubmit}
-            disabled={isBookingLoading} // (수정)
-          >
-            {isBookingLoading ? "예매 처리 중..." : "예매하기"}
-          </button>
-        </div>
-        </>
-        ) : null} 
-      </div>
+      </Draggable>
     </Modal>
   );
 }

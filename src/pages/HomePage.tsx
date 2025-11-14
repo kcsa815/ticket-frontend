@@ -18,7 +18,7 @@ function HomePage() {
 
         <MusicalSection
           title="오픈 예정"
-          apiUrl="/api/musicals?section=comingSoon"
+          apiUrl="/api/musicals?section=upcoming"
           layoutType="comingSoon"
           viewAllLink="/coming-soon"
         />

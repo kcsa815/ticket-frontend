@@ -1,5 +1,16 @@
-.pageContainer {
-  padding: 20px;
+.modalContent {
+  /* (Req 4) 이것이 팝업 창의 '본체' 스타일입니다 */
+  width: 1000px; /* (최대 900px, 90%) */
+  max-width: 90%;
+  /* max-height: 90vh; */
+  overflow-y: auto; /* (중요) 스크롤은 여기서 */
+  
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+
+  /* (주의!) padding: 0; (상단 바가 꽉 차도록) */
+  padding: 0; 
 }
 
 .loading, .error {
@@ -8,72 +19,194 @@
   margin-top: 50px;
 }
 
-.title {
-  text-align: center;
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-}
-.subTitle {
-  text-align: center;
-  font-size: 1.1rem;
-  color: #555;
-  margin-bottom: 30px;
+/* --- (Req 1) 상단 타이틀 바 (1:4 비율) --- */
+.topBar {
+  display: flex;
+  width: 100%;
 }
 
-/* 좌석 배치판 (Grid) */
-.seatGrid {
-  display: grid;
-  /* (임시) 10열 그리드. */
-  grid-template-columns: repeat(10, 1fr);
-  gap: 8px;
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 20px;
-  background: #f4f4f4;
-  border-radius: 8px;
-}
-
-/* 개별 좌석 버튼 */
-.seat {
-  background-color: #fff;
-  border: 1px solid #aaa;
-  border-radius: 4px;
-  padding: 5px 0;
-  text-align: center;
-  font-size: 0.7rem;
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
-}
-
-.seat:hover {
-  background-color: #eee;
-}
-
-/* 선택된 좌석 */
-.seat.selected {
-  background-color: #d9534f;
+/* (Req 1) 왼쪽 "좌석선택" (빨강) */
+.topBarTitle {
+  flex: 1; /* 1의 비율 */
+  background: #d9534f;
   color: white;
-  border-color: #c9302c;
+  padding: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* (Req 1) 오른쪽 "공연정보" (회색) */
+.topBarInfo {
+  flex: 4; /* 4의 비율 */
+  background: #f4f4f4;
+  padding: 15px 20px;
+  border-bottom: 1px solid #ddd;
+}
+.topBarInfo h3 {
+  font-size: 1.2rem;
+  margin: 0;
   font-weight: bold;
 }
+.topBarInfo p {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 5px 0 0;
+}
 
-/* 이미 예약된 좌석 */
+/* --- (Req 2 & 3) 중단 (3:1 비율) --- */
+.mainContent {
+  display: flex;
+  padding: 20px; /* (Req 3) "하얀색 여백" */
+  gap: 20px;
+}
+
+/* (Req 2) 왼쪽 (좌석맵) */
+.leftContent {
+  flex: 3; /* 3의 비율 */
+  width: 0;
+}
+/* (좌석맵 컨테이너) */
+.seatMapContainer {
+  position: relative;
+  width: 100%;
+  height: 500px; /* (좌석맵 높이 - 이미지에 맞게 조절 필요) */
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  background-image: url('/theaterDream.jpg'); /* (public 폴더의 배경 이미지) */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* --- 개별 좌석 버튼 (자식) --- */
+.seat {
+  position: absolute; /* X, Y 좌표로 배치됨 */
+  
+  /* (디자인) 좌석 버튼 크기/모양 */
+  width: 20px; 
+  height: 20px;
+  border-radius: 4px;
+  font-size: 0.6rem; /* 폰트 최소화 (숫자만 보이게) */
+  
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  
+  /* (Req 2) 등급별 기본 색상 */
+  background-color: #fff;
+  border: 1px solid #aaa;
+  color: #333;
+}
+.seat:hover {
+  transform: scale(1.2); /* (호버 시 커짐) */
+}
+
+/* --- 등급별 색상 --- */
+.seat.VIP {
+  background-color: #c93d79; 
+  border-color: #a33162;
+  color: white;
+}
+.seat.R {
+  background-color: #4a9ff5;
+  border-color: #3b7fce;
+  color: white;
+}
+.seat.S {
+  background-color: #5cb85c; 
+  border-color: #4cae4c;
+  color: white;
+}
+.seat.A {
+  background-color: #f0ad4e;
+  border-color: #eea236;
+  color: white;
+}
+
+/* ---선택된 좌석 스타일--- */
+/* (등급 색상을 덮어써야 함) */
+.seat.selected {
+  background-color: #6c757d;
+  color: white;
+  border-color: #5a6268;
+  transform: scale(1.3); /* (더 크게) */
+}
+
+/* (예약된 좌석 스타일 - 최우선) */
 .seat.reserved {
   background-color: #bbb;
   color: #777;
   border-color: #aaa;
   cursor: not-allowed;
   text-decoration: line-through;
+  transform: scale(1); /* (효과 없음) */
 }
 
-/* 예매 버튼 컨테이너 */
+/* (Req 3) 오른쪽 (좌석 정보) */
+.rightContent {
+  flex: 1; /* 1의 비율 */
+  width: 0;
+}
+
+.seatInfoBox,
+.selectedSeatsBox {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+.seatInfoBox h4,
+.selectedSeatsBox h4 {
+  margin: 0 0 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+/* (Req 3) 등급/잔여석 */
+.gradeInfo {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+.gradeInfo .price {
+  color: #333;
+  font-weight: bold;
+}
+.gradeInfo .count {
+  color: #d9534f;
+  font-weight: bold;
+}
+
+/* (Req 3) 선택 좌석 목록 */
+.selectedList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.9rem;
+}
+.selectedList li {
+  background: #f9f9f9;
+  padding: 5px 8px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+/* (예매 버튼) */
 .bookingActions {
+  /* margin-top: auto; (오른쪽 컬럼 하단에 붙이기) */
   text-align: center;
-  margin-top: 30px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
 }
 
 .bookButton {
   background-color: #d9534f;
+  width: 210px;
   color: white;
   border: none;
   padding: 15px 30px;
@@ -86,6 +219,6 @@
   background-color: #c9302c;
 }
 .bookButton:disabled {
-  background-color: #aaa; /* (신규) 비활성화 버튼 */
+  background-color: #aaa; /*비활성화 버튼 */
   cursor: not-allowed;
 }
