@@ -15,7 +15,7 @@
 /* (기본) 4열 카드 그리드 (기존 HomePage 스타일) */
 .gridContainer {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
 }
 

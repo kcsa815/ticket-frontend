@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; 
+import { useAuth } from "../context/AuthContext";
 import styles from './HomePage.module.css'; 
 import { FaChevronRight } from "react-icons/fa"; // (어드민 버튼용)
 
@@ -10,6 +10,9 @@ interface Musical {
   musicalId: number;
   title: string;
   posterImageUrl: string;
+  venueName: string | null;
+  minPrice: number | null; 
+  maxPrice: number | null;
 }
 interface ErrorResponse { message: string; }
 
@@ -96,6 +99,15 @@ function MusicalListPage() {
               <Link to={`/musical/${musical.musicalId}`}>
                 <h3 className={styles.title}>{musical.title}</h3>
               </Link>
+
+              <p className={styles.infoText}>
+                {musical.venueName || '공연장 미정'}
+              </p>
+              <p className={styles.priceText}>
+                {musical.minPrice ? 
+                  `${musical.minPrice.toLocaleString()}원 ~` : 
+                  '가격 미정'}
+              </p>
               
               {/* --- (ADMIN 전용 버튼 추가) --- */}
               {userRole === 'ROLE_ADMIN' && (

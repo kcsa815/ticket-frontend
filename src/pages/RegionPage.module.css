@@ -1,0 +1,84 @@
+.pageContainer {
+  padding: 20px 0; /* (content-wrapper가 좌우 여백을 담당) */
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* (Req 1) 1:2 비율의 좌우 레이아웃 */
+.mainLayout {
+  display: flex;
+  gap: 30px;
+}
+
+/* (1) 왼쪽 (지도) */
+.mapContainer {
+  flex: 1; /* 1의 비율 */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fdfdfd;
+}
+
+/* (지도 스타일) */
+.geoDefault {
+  fill: #EEE;
+  stroke: #FFF;
+  stroke-width: 0.5;
+  outline: none;
+  cursor: pointer;
+  transition: fill 0.2s;
+}
+.geoDefault:hover {
+  fill: #f0c8c7; /* (마우스 오버 색상) */
+  outline: none;
+}
+.geoSelected {
+  fill: #d9534f; /* (선택된 지역 색상) */
+  stroke: #FFF;
+  stroke-width: 0.5;
+  outline: none;
+  cursor: pointer;
+}
+
+
+/* (2) 오른쪽 (공연 목록) */
+.listContainer {
+  flex: 1; /* 1의 비율 */
+  max-height: 600px; /* (지도 높이와 비슷하게) */
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+}
+.listContainer h3 {
+  margin: 0 0 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.performanceList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.performanceItem {
+  border-bottom: 1px solid #eee;
+  padding: 10px 5px;
+}
+.performanceItem:last-child {
+  border-bottom: none;
+}
+.performanceItem strong {
+  font-size: 1.1rem;
+  color: #333;
+}
+.performanceItem p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 5px 0;
+}

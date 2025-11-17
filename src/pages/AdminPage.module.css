@@ -1,52 +1,140 @@
+/*
+ * ⭐️ (신규) 2-Column 레이아웃 (Req: DetailPage)
+ */
+
 .pageContainer {
-  padding: 20px;
+  padding: 20px 0;
+  max-width: 1000px; /* (기존 600px -> 1000px) */
+  margin: 20px auto;
 }
+
+.mainLayout {
+  display: flex;
+  gap: 30px; /* (컬럼 사이 간격) */
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* --- (1) 왼쪽 컬럼 (제목 + 포스터) --- */
+.leftColumn {
+  flex: 1; /* 1의 비율 (약 33%) */
+  width: 0;
+}
+
 .pageTitle {
-  font-size: 2rem;
-  margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 20px;
+  text-align: left; /* (중앙 정렬 제거) */
 }
+
+/* (신규) 포스터 이미지 (미리보기) */
+.posterPreview {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4; /* (3:4 비율 고정) */
+  object-fit: cover;
+  border-radius: 8px;
+  background-color: #f4f4f4; /* (이미지 없을 때 배경) */
+  border: 1px dashed #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+/* (미리보기 <img /> 태그 스타일) */
+.posterPreview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+
+/* --- (2) 오른쪽 컬럼 (폼) --- */
+.rightColumn {
+  flex: 2; /* 2의 비율 (약 66%) */
+  width: 0;
+}
+
 .form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  max-width: 600px;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  gap: 0; /* (formGroup이 여백을 담당) */
 }
-.form div {
-  display: flex;
-  flex-direction: column;
+
+/* (CSS Adapt) .form-group */
+.formGroup {
+  margin-bottom: 20px;
 }
-.form label {
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
   font-weight: bold;
-  margin-bottom: 5px;
+  color: #555;
 }
-.form input, .form textarea {
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
+
+/* (CSS Adapt) input, textarea, select */
+.formGroup input[type="text"],
+.formGroup input[type="number"],
+.formGroup input[type="file"],
+.formGroup textarea,
+.formGroup select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
   border-radius: 5px;
+  box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+  font-size: 1rem; /* (16px -> 1rem) */
   font-family: inherit;
 }
-.form textarea {
-  min-height: 150px;
+.formGroup input[type="file"] {
+  padding: 8px; /* (파일 인풋은 패딩 조절) */
+}
+
+.formGroup textarea {
   resize: vertical;
+  min-height: 150px;
 }
-.form input[type="file"] {
-  padding: 3px;
+
+/* (CSS Adapt) fieldset (등급별 가격용) */
+.fieldset {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
 }
+.fieldset legend {
+  font-weight: bold;
+  color: #333;
+  padding: 0 10px;
+  font-size: 1.1em;
+}
+
+/* (CSS Adapt) .submit-btn */
 .submitButton {
+  width: 100%;
+  padding: 15px;
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 12px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1.1rem; /* (18px -> 1.1rem) */
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+.submitButton:hover {
+  background-color: #0056b3;
 }
 .submitButton:disabled {
   background-color: #aaa;
 }
-.error { color: red; }
-.success { color: green; }
+
+/* (에러/성공 메시지) */
+.error { color: red; margin-top: 15px; }
+.success { color: green; margin-top: 15px; }

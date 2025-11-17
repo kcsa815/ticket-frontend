@@ -10,66 +10,121 @@
   padding-bottom: 10px;
 }
 
-/* 뮤지컬 목록을 감싸는 그리드(Grid) */
+/*
+ * ⭐️ 공연 목록 그리드 (핵심 부분) ⭐️
+ * (HomePage, MusicalListPage, MusicalSection에서 공용으로 사용)
+ */
 .gridContainer {
-  display: grid;
-  /* 1fr 1fr 1fr 1fr : 4개의 아이템을 1:1:1:1 비율로 
-    (창 크기에 따라 3개, 2개로 보이게 하려면 미디어 쿼리가 필요하지만, 우선 4개로 고정)
-  */
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px; /* 카드 사이의 간격 */
-  margin-top: 20px;
-}
-
-/* 개별 뮤지컬 카드 */
-.musicalCard {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden; /* 이미지가 카드를 삐져나가지 않도록 */
-  text-decoration: none; /* 링크의 밑줄 제거 */
-  color: black;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s;
-}
-
-/* 카드에 마우스를 올렸을 때 효과 */
-.musicalCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* 포스터 이미지 */
-.posterImage {
-  width: 100%; /* 카드 가로폭 100% */
-  height: 350px; /* 이미지 높이 고정*/
-  object-fit: cover; /* 비율을 유지하면서 꽉 채우기 */
-}
-
-/* 카드 하단의 정보 (제목 등) */
-.info {
-  padding: 15px;
-}
-
-/* 뮤지컬 제목 */
-.title {
-  font-size: 1.2rem;
-  font-weight: bold;
+  list-style: none;
+  padding: 0;
   margin: 0;
-  /* (제목이 길면 ...으로 자르기) */
-  white-space: nowrap;
+  display: grid;
+  
+  /* 4열 그리드 (5열은 너무 좁을 수 있습니다) */
+  grid-template-columns: repeat(4, 1fr);
+
+  /* 아이템 사이의 간격 */
+  gap: 30px 24px; /* (상하 간격 30px, 좌우 간격 24px) */
+}
+
+
+/*
+ * ⭐️ 개별 공연 카드 (수정!) ⭐️
+ */
+.musicalCard {
+  /* (배경/테두리/그림자/overflow 제거) */
+  text-align: left;
+  transition: transform 0.2s; 
+  display: flex;
+  flex-direction: column; 
+  position: relative; /* 👈 [1. (신규)] z-index 기준점 */
+  z-index: 1; /* 👈 [2. (신규)] */
+}
+
+/* [수정!] :hover 시 '이미지'가 떠오르도록 변경 */
+.musicalCard:hover .posterImage {
+   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+   transform: translateY(-5px);
+}
+
+/* [수정!] 포스터 이미지 (핵심) */
+.posterImage {
+  width: 100%; 
+  height: auto; 
+  aspect-ratio: 3 / 4; /* 3:4 비율 강제 (포스터 모양) */
+  object-fit: cover; 
+  display: block;
+  
+  border-radius: 8px; /* 👈 [신규!] 둥근 모서리 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 👈 [신규!] 이미지에 그림자 */
+  transition: all 0.2s ease-in-out; /* 👈 [신규!] (hover 효과용) */
+}
+
+/* [수정!] 정보 영역 (패딩 수정) */
+.info {
+ padding: 10px 5px 0;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: relative;
+  z-index: 10; 
+  background-color: white;
+}
+.info a {
+  text-decoration: none;
+  color: inherit;
+}
+.info a:focus { /* (포커스 스타일은 유지) */
+  outline: 2px solid #0056b3;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* [수정!] 뮤지컬 제목 (참조 이미지처럼) */
+.title {
+  font-size: 1.1rem; /* (살짝 크게) */
+  font-weight: 600; /* (살짝 굵게) */
+  color: #222;
+  margin: 0 0 5px; 
+  
+  /* (2줄 말줄임표 - 유지) */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-height: 2.2em; /* (2줄 높이 고정) */
 }
 
+/* [수정!] 공연장 텍스트 (참조 이미지처럼) */
+.infoText {
+  font-size: 0.9rem;
+  color: #555; /* (살짝 진하게) */
+  margin: 4px 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-/* 관리자 수정, 삭제 버튼 */
+/* [수정!] 가격 텍스트 (참조 이미지처럼 - 날짜 대신 가격) */
+.priceText {
+  font-size: 0.9rem;
+  font-weight: 500; /* (Bold -> 500) */
+  color: #333;
+  margin: 4px 0 0;
+}
+
+/* (ADMIN 버튼 - 스타일 유지) */
 .adminButtons {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
+  margin-top: auto; 
+  padding-top: 10px; 
+  position: relative;
+  z-index: 11; /* (info보다도 높게) */
 }
 .adminButtons button {
-  width: 48%; /* 버튼 2개가 반씩 나눠가짐 */
+  width: 48%;
   padding: 8px;
   font-size: 0.9rem;
   border: 1px solid #ddd;
@@ -81,9 +136,56 @@
   background: #eee;
 }
 .adminButtons button:last-child {
-  background: #ffe0e0; /* (삭제 버튼은 붉은색) */
+  background: #fff0f0;
   border-color: #fdd;
 }
 .adminButtons button:last-child:hover {
   background: #ffe0e0;
+}
+
+.viewAllContainer {
+  text-align: center; /* 버튼 중앙 정렬 */
+  margin-top: 30px; /* 그리드 목록과의 간격 */
+}
+
+.viewAllButton {
+  display: inline-block; /* (Link 태그를 버튼처럼 만듦) */
+  text-decoration: none;
+  color: #333;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  
+  padding: 10px 25px; /* 버튼 크기 */
+  font-size: 1rem;
+  font-weight: 500;
+  
+  border-radius: 20px; /* 👈 (요청!) 둥근 모서리 */
+  
+  transition: all 0.2s;
+}
+
+.viewAllButton:hover {
+  background-color: #eee;
+  border-color: #ccc;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+
+/*
+ * 💡 반응형 웹 디자인 (유지)
+ */
+@media (max-width: 1200px) {
+  .gridContainer {
+    grid-template-columns: repeat(3, 1fr); /* 3열로 변경 */
+  }
+}
+@media (max-width: 768px) {
+  .gridContainer {
+    grid-template-columns: repeat(2, 1fr); /* 2열로 변경 */
+  }
+}
+@media (max-width: 480px) {
+  .gridContainer {
+    grid-template-columns: repeat(1, 1fr); /* 1열로 변경 */
+  }
 }

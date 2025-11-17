@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 // (페이지 컴포넌트 임포트)
@@ -6,20 +5,22 @@ import HomePage from './pages/HomePage';
 import MusicalDetailPage from './pages/MusicalDetailPage';
 import LoginPage from './pages/LoginPage';
 import MyBookingsPage from './pages/MyBookingsPage';
+import BookingPage from './pages/BookingPage'; // (모달이지만, App.tsx에 없어야 함 - 확인 필요)
 import AdminPage from './pages/AdminPage';
-import MusicalListPage from './pages/MusicalListPage';
 import AdminPerformancePage from './pages/AdminPerformancePage';
+import AdminMusicalEditPage from './pages/AdminMusicalEditPage'; // (이것도 임포트 필요)
+import MusicalListPage from './pages/MusicalListPage';
+import RegionPage from './pages/RegionPage'; 
+
 // (레이아웃 및 보호막 임포트)
 import Header from './components/layout/Header';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import './App.css'; // (전역 CSS)
-import AdminMusicalEditPage from './pages/AdminMusicalEditPage';
+import './App.css'; 
 
-// (준비중 페이지)
+// ---  "임시" VenuesPage 선언만 남김] ---
 const VenuesPage = () => <div><h2>공연장 목록 페이지(준비중)</h2></div>;
-const RegionPage = () => <div><h2>지역별 페이지(준비중)</h2></div>;
 
 
 function App() {
@@ -28,63 +29,41 @@ function App() {
       <Header />
       <Navbar />
       <main className='main-content'>
-        
         <Routes>
           {/* --- 공용 경로 --- */}
           <Route path='/' element={<HomePage />} />
           <Route path='/musical/:musicalId' element={<MusicalDetailPage />} />
           <Route path='/login' element={<LoginPage />} />
           
-          {/* --- 네비바 링크 연결 (공용) --- */}
+          {/* --- 네비바 링크 연결 --- */}
           <Route path='/musicals' element ={<MusicalListPage />} />
           <Route path='/rankings' element={<MusicalListPage />} />
           <Route path='/coming-soon' element={<MusicalListPage />} />
           <Route path='/sales' element={<MusicalListPage />} />
-          <Route path='/region' element={<RegionPage />} />
+          <Route path='/region' element={<RegionPage />} /> 
           <Route path='/venues' element={<VenuesPage />} />
             
           {/* --- 보호된 경로 (USER) --- */}
-          {/* (v6 방식: <ProtectedRoute>를 element prop 안에 넣음) */}
           <Route 
             path='/my-bookings' 
-            element={
-              <ProtectedRoute>
-                <MyBookingsPage />
-              </ProtectedRoute>
-            } 
+            element={ <ProtectedRoute><MyBookingsPage /></ProtectedRoute> } 
           />
+          {/* (BookingPage는 모달이므로 Route 없음) */}
           
           {/* --- 보호된 경로 (ADMIN) --- */}
           <Route
             path="/admin/add-musical"
-            element={
-              <ProtectedRoute adminOnly={true}>
-                <AdminPage />
-              </ProtectedRoute>
-            }
+            element={ <ProtectedRoute adminOnly={true}><AdminPage /></ProtectedRoute> }
           />
-
           <Route
-            path='/admin/add-performance'  //공연 회차 등록
-            element={
-              <ProtectedRoute adminOnly={true}>
-                <AdminPerformancePage />
-              </ProtectedRoute>
-            }
+            path="/admin/add-performance"
+            element={ <ProtectedRoute adminOnly={true}><AdminPerformancePage /></ProtectedRoute> }
           />
-
-          <Route 
-            path='/admin/musical/edit/:musicalId'
-            element={
-              <ProtectedRoute adminOnly={true}>
-                <AdminMusicalEditPage />
-              </ProtectedRoute>
-            }
+          <Route
+            path="/admin/musical/edit/:musicalId"
+            element={ <ProtectedRoute adminOnly={true}><AdminMusicalEditPage /></ProtectedRoute> }
           />
-
-          
         </Routes>
-        
       </main>
       <Footer />
     </div>
