@@ -21,3 +21,21 @@
 .loginButton { background-color: #d9534f; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; font-size: 1.1rem; font-weight: bold; }
 .loginButton:hover { background-color: #c9302c; }
 .error { color: red; text-align: center; }
+
+
+/* 회원가입 버튼 */
+.signupLink {
+  text-align: center;
+  margin-top: 20px; /* (로그인 폼과의 간격) */
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.signupLink a {
+  color: #007bff; /* (링크 색상) */
+  font-weight: bold;
+  text-decoration: none;
+}
+.signupLink a:hover {
+  text-decoration: underline;
+}

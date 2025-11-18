@@ -34,8 +34,8 @@ function MusicalSection({ title, apiUrl, layoutType, viewAllLink }: Props) {
       try {
         const response = await axios.get(`http://localhost:8080${apiUrl}`);
         
-        // (HomePage용 'limit')
-        const sliceCount = layoutType === "ranking" ? 5 : 4;
+        // 홈페이지에 섹션을 5개씩 보여줌
+        const sliceCount = 5;
         setMusicals(response.data.slice(0, sliceCount));
         
       } catch (err) {
@@ -83,14 +83,12 @@ function MusicalSection({ title, apiUrl, layoutType, viewAllLink }: Props) {
                   '가격 미정'}
               </p>
               
-              {/* --- 👇 [핵심!] 이 부분이 복구되었습니다! --- */}
               {userRole === "ROLE_ADMIN" && (
                 <div className={styles.adminButtons}>
                   <button onClick={(e) => handleEdit(e, musical.musicalId)}>수정</button>
                   <button onClick={(e) => handleDelete(e, musical.musicalId)}>삭제</button>
                 </div>
               )}
-              {/* --- 👆 --- */}
             </div>
           </div>
         ))}

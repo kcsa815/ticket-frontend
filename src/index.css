@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Asta+Sans:wght@300..800&display=swap');
 
 
 body {
@@ -8,7 +8,7 @@ body {
   min-height: 100vh;
   width: 100%;
   overflow-x: hidden;
-  font-family: "Gowun Dodum", sans-serif;
+  font-family: "Asta Sans", sans-serif;
 }
 
 * {
@@ -47,7 +47,7 @@ button {
 
 .content-wrapper{
   width: 100%;
-  max-width: 1500px;
+  max-width: 1600px;
   margin-left: auto;
   margin-right: auto;
   padding-left: 200px;

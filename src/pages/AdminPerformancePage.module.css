@@ -1,0 +1,112 @@
+/* "회차 등록" (1단 폼) 전용 CSS */
+
+.pageContainer {
+  max-width: 800px; /* (2단이 아니므로 800px로) */
+  margin: 20px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.pageTitle {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 30px;
+  text-align: center; /* (1단이므로 중앙 정렬) */
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0; 
+}
+
+/* 폼 그룹 */
+.formGroup {
+  margin-bottom: 20px;
+}
+.formGroup label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+/* input, textarea, select */
+.formGroup input[type="text"],
+.formGroup input[type="number"],
+.formGroup input[type="datetime-local"],
+.formGroup select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box; 
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+/* 읽기 전용 input 스타일 (지역) */
+.formGroup input[readonly] {
+  background-color: #f8f8f8;
+  color: #555;
+}
+
+/* 등급별 가격 (이전과 동일 - 잘 작동한다고 하심) */
+.fieldset {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+  display: grid; 
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+.fieldset legend {
+  font-weight: bold;
+  color: #333;
+  padding: 0 10px;
+  font-size: 1.1em;
+}
+.fieldset div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.fieldset label {
+  font-weight: normal;
+  color: #555;
+  margin: 0;
+}
+.fieldset input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box; 
+  font-size: 1rem;
+}
+
+/* 제출 버튼 */
+.submitButton {
+  width: 100%;
+  padding: 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+.submitButton:disabled {
+  background-color: #aaa;
+}
+
+/* (에러/성공 메시지) */
+.error { color: red; margin-top: 15px; }
+.success { color: green; margin-top: 15px; }

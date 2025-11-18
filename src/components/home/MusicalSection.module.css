@@ -25,10 +25,10 @@
   flex-wrap: wrap; /* 화면이 작아지면 줄바꿈 */
 }
 
-/* (수정) "오픈 예정" 섹션 스타일 (3열, grid 기반) */
+/* "오픈 예정" 섹션 스타일 (3열, grid 기반) */
 .gridContainer.comingSoon {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 25px; /* 아이템 사이의 간격 */
 }
 
@@ -66,7 +66,7 @@
 }
 
 
-/* (수정) "랭킹" 카드 스타일 (.ranking-item) */
+/*  "랭킹" 카드 스타일 (.ranking-item) */
 .musicalCard.ranking {
   width: 18%; /* 5개 아이템을 한 줄에 배치 */
   min-width: 150px;

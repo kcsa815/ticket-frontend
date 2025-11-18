@@ -5,12 +5,12 @@ import HomePage from './pages/HomePage';
 import MusicalDetailPage from './pages/MusicalDetailPage';
 import LoginPage from './pages/LoginPage';
 import MyBookingsPage from './pages/MyBookingsPage';
-import BookingPage from './pages/BookingPage'; // (모달이지만, App.tsx에 없어야 함 - 확인 필요)
 import AdminPage from './pages/AdminPage';
 import AdminPerformancePage from './pages/AdminPerformancePage';
 import AdminMusicalEditPage from './pages/AdminMusicalEditPage'; // (이것도 임포트 필요)
 import MusicalListPage from './pages/MusicalListPage';
 import RegionPage from './pages/RegionPage'; 
+import SignUpPage from './pages/SignUpPage';
 
 // (레이아웃 및 보호막 임포트)
 import Header from './components/layout/Header';
@@ -34,6 +34,7 @@ function App() {
           <Route path='/' element={<HomePage />} />
           <Route path='/musical/:musicalId' element={<MusicalDetailPage />} />
           <Route path='/login' element={<LoginPage />} />
+          <Route path='/signup' element={<SignUpPage />} />
           
           {/* --- 네비바 링크 연결 --- */}
           <Route path='/musicals' element ={<MusicalListPage />} />

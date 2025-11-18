@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useMemo } from 'react'; // 👈 [1. useMemo 임포트]
+import React, { useState, useEffect, useMemo } from 'react';
 import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
-import styles from './AdminPage.module.css'; // (AdminPage CSS 재사용)
 
-// --- (1) 백엔드 DTO와 맞추는 타입 정의 ---
+// --- 👇 [1. (핵심!) CSS Import 경로 변경] ---
+import styles from './AdminPerformancePage.module.css'; 
+// --- 👆 ---
+
+// (Interface 정의)
 interface Venue {
   venueId: number;
   name: string;
-  region: string; // 👈 (Region 포함)
+  region: string; 
 }
 interface Musical {
   musicalId: number;
@@ -22,26 +25,23 @@ interface PerformanceSaveReqDto {
   };
 }
 interface ErrorResponse { message: string; }
-// ------------------------------------
+
 
 function AdminPerformancePage() {
   const navigate = useNavigate();
 
-  // --- 👇 [2. (핵심!) 누락된 useState 선언부] ---
+  // (useState 선언부)
   const [formData, setFormData] = useState<PerformanceSaveReqDto>({
     musicalId: null,
     venueId: null,
     performanceDate: '',
     pricesByGrade: {},
   });
-  
   const [musicals, setMusicals] = useState<Musical[]>([]);
   const [venues, setVenues] = useState<Venue[]>([]);
-
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  // --- 👆 ---
 
   // (useEffect - API 호출)
   useEffect(() => {
@@ -58,7 +58,7 @@ function AdminPerformancePage() {
       }
     };
     fetchDropdownData();
-  }, []); // 페이지 로드 시 1회 실행
+  }, []);
 
   // (폼 입력 변경 핸들러)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -68,29 +68,23 @@ function AdminPerformancePage() {
       [name]: value ? Number(value) : null, 
     }));
   };
-  
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({ ...prev, performanceDate: e.target.value }));
   };
-
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      pricesByGrade: {
-        ...prev.pricesByGrade,
-        [name]: Number(value) || 0,
-      }
+      pricesByGrade: { ...prev.pricesByGrade, [name]: Number(value) || 0 }
     }));
   };
 
-  // --- 👇 [3. (신규!) 선택된 공연장의 '지역'을 찾는 useMemo] ---
+  // (지역 자동 선택)
   const selectedVenueRegion = useMemo(() => {
-    if (!formData.venueId) return ""; // 선택 안 됨
+    if (!formData.venueId) return "";
     const foundVenue = venues.find(v => v.venueId === formData.venueId);
-    return foundVenue ? foundVenue.region : ""; // (예: "SEOUL")
+    return foundVenue ? foundVenue.region : ""; 
   }, [formData.venueId, venues]);
-  // --- 👆 ---
 
   // (폼 제출 핸들러)
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -104,18 +98,13 @@ function AdminPerformancePage() {
         'http://localhost:8080/api/performances',
         formData
       );
-      
       setSuccess(`공연 회차(ID: ${response.data}) 등록 성공!`);
-      // (폼 초기화)
       setFormData({
         musicalId: null,
         venueId: null,
         performanceDate: '',
         pricesByGrade: {},
       });
-      // (폼 DOM 초기화) - <form> 태그에 ref={formRef} 추가 필요
-      // e.currentTarget.reset(); 
-
     } catch (err) {
       console.error('공연 회차 등록 실패:', err);
       if (axios.isAxiosError<ErrorResponse>(err) && err.response) {
@@ -128,14 +117,17 @@ function AdminPerformancePage() {
     }
   };
 
+  
+  // --- 👇 [2. (핵심!) JSX가 "1단 CSS" 클래스를 사용하도록 수정] ---
   return (
-    <div className={`content-wrapper ${styles.pageContainer}`}>
+    // [수정!] 2단 레이아웃 클래스(mainLayout 등) 제거
+    <div className={`content-wrapper ${styles.pageContainer}`}> 
+      
       <h2 className={styles.pageTitle}>관리자: 새 공연 회차 등록</h2>
       
       <form onSubmit={handleSubmit} className={styles.form}>
         
-        {/* (뮤지컬 선택 드롭다운) */}
-        <div>
+        <div className={styles.formGroup}>
           <label htmlFor="musicalId">뮤지컬 선택</label>
           <select 
             id="musicalId" 
@@ -153,8 +145,7 @@ function AdminPerformancePage() {
           </select>
         </div>
         
-        {/* (공연장 선택 드롭다운) */}
-        <div>
+        <div className={styles.formGroup}>
           <label htmlFor="venueId">공연장 선택</label>
           <select 
             id="venueId" 
@@ -166,26 +157,24 @@ function AdminPerformancePage() {
             <option value="">-- 공연장을 선택하세요 --</option>
             {venues.map(venue => (
               <option key={venue.venueId} value={venue.venueId}>
-                {venue.name} ({venue.region}) {/* 👈 (지역 표시) */}
+                {venue.name} ({venue.region})
               </option>
             ))}
           </select>
         </div>
 
-        {/* --- 👇 [4. (신규!) 자동 선택된 지역 (읽기 전용)] --- */}
-        <div>
+        <div className={styles.formGroup}>
           <label htmlFor="region">지역 (자동 선택)</label>
           <input
             id="region"
             type="text"
-            value={selectedVenueRegion} // 👈 useMemo로 계산된 값
-            readOnly // 👈 수정 불가
-            style={{ background: '#f8f8f8' }} // (읽기 전용 스타일)
+            value={selectedVenueRegion}
+            readOnly
+            className={styles.readOnlyInput} // (CSS에 .readOnlyInput 추가함)
           />
         </div>
-        {/* --- 👆 --- */}
 
-        <div>
+        <div className={styles.formGroup}>
           <label htmlFor="performanceDate">공연 날짜 및 시간</label>
           <input 
             id="performanceDate" 
@@ -196,9 +185,8 @@ function AdminPerformancePage() {
           />
         </div>
 
-        {/* (등급별 가격 입력) */}
-        <fieldset style={{border: '1px solid #ddd', borderRadius: '5px'}}>
-          <legend style={{fontWeight: 'bold', marginLeft: '10px'}}>등급별 가격</legend>
+        <fieldset className={styles.fieldset}>
+          <legend>등급별 가격</legend>
           <div>
             <label htmlFor="VIP">VIP</label>
             <input id="VIP" name="VIP" type="number" onChange={handlePriceChange} placeholder="150000" />

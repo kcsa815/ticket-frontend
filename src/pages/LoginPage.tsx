@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import styles from './LoginPage.module.css';
 
 function LoginPage() {
@@ -45,6 +45,9 @@ function LoginPage() {
         <button type="submit" className={styles.loginButton}>로그인</button>
         {error && <p className={styles.error}>{error}</p>}
       </form>
+      <div className={styles.signupLink}>
+          아직 회원이 아니신가요? <Link to="/signup">회원가입</Link>
+        </div>
     </div>
   );
 }

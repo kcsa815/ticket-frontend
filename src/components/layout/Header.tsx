@@ -29,7 +29,7 @@ function Header(){
 
                     {/* 검색창 */}
                     <div className={styles.searchBar}>
-                        <input type="text" placeholder="검색어를 입력하세요^^7"/>
+                        <input type="text" placeholder="검색어를 입력하세요"/>
                         <button><FiSearch /></button>
                     </div>
                 </div>
@@ -51,7 +51,6 @@ function Header(){
                 {/* 1. 로그인/로그아웃 버튼 (이 부분만 조건부 렌더링) */}
                 <div className={styles.userName}>
                     {!isLoggedIn ? (
-                    //나중에 '로그인 페이지'를 만들면 <Link to="/login">으로 감싸기
                     <Link to="/login" className={styles.headerButton}> 
                         <BiUser size={20} />
                         <span style={{ marginLeft: '5px' }}>로그인</span>

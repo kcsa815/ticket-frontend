@@ -10,11 +10,10 @@
 
 .mainLayout {
   display: flex;
-  gap: 30px; /* (컬럼 사이 간격) */
+  gap: 30px; 
   padding: 30px;
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 /* --- (1) 왼쪽 컬럼 (제목 + 포스터) --- */
@@ -98,7 +97,6 @@
 
 .formGroup textarea {
   resize: vertical;
-  min-height: 150px;
 }
 
 /* (CSS Adapt) fieldset (등급별 가격용) */
