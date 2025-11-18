@@ -11,6 +11,7 @@ import AdminMusicalEditPage from './pages/AdminMusicalEditPage'; // (이것도 �
 import MusicalListPage from './pages/MusicalListPage';
 import RegionPage from './pages/RegionPage'; 
 import SignUpPage from './pages/SignUpPage';
+import AdminVenueEditorPage from './pages/AdminVenueEditorPage';
 
 // (레이아웃 및 보호막 임포트)
 import Header from './components/layout/Header';
@@ -63,6 +64,15 @@ function App() {
           <Route
             path="/admin/musical/edit/:musicalId"
             element={ <ProtectedRoute adminOnly={true}><AdminMusicalEditPage /></ProtectedRoute> }
+          />
+
+          <Route 
+            path="/admin/add-venue" // (공연장 등록 - 좌석 에디터)
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <AdminVenueEditorPage />
+              </ProtectedRoute>
+            }
           />
         </Routes>
       </main>

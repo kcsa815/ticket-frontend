@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react'; // 👈 [수정!] (Children 제거)
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styles from './BookingPage.module.css';

@@ -27,11 +27,15 @@
 
 
 .logo {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  text-decoration: none;
-  flex-shrink: 0; 
+  display: flex; /* 이미지를 중앙에 배치하기 위함 */
+  align-items: center;
+}
+
+.logo img {
+  height: 38px; /* 로고의 높이를 40px로 고정 (원하는 크기로 조절) */
+  width: auto; /* 높이에 맞춰 너비 자동 조절 (비율 유지) */
+  object-fit: contain; /* 이미지가 잘리지 않고 영역 안에 맞게 */
+  margin-right: 10px; /* 로고와 다음 요소 사이의 간격 */
 }
 
 /* 검색창 */

@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Asta+Sans:wght@300..800&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Asta+Sans:wght@300..800&display=swap");
 
 body {
   margin: 0;
@@ -24,7 +23,6 @@ button {
   cursor: pointer;
 }
 
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -38,14 +36,13 @@ button {
   }
 }
 
-
-.app-container{
+.app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-.content-wrapper{
+.content-wrapper {
   width: 100%;
   max-width: 1600px;
   margin-left: auto;
@@ -55,15 +52,14 @@ button {
   box-sizing: border-box;
 }
 
-.main-content{
+.main-content {
   flex-grow: 1;
   padding: 0;
 }
 
-
 /* 모달 오버레이(뒷배경)*/
 .ReactModal__Overlay {
-  background-color: rgba(0, 0, 0, 0.75) !important; 
+  background-color: rgba(0, 0, 0, 0.75) !important;
   display: flex !important;
   z-index: 2000;
   align-items: flex-start;
@@ -76,4 +72,46 @@ button {
   padding: 0 !important;
   border: none !important;
   background: none !important;
+}
+
+/* 모바일 반응형 (768px 이하) */
+@media (max-width: 768px) {
+  /* 1. 전체 레이아웃: 좌우 배치 -> 상하 배치 */
+  .mainLayout,
+  .mainContent {
+    flex-direction: column !important;
+  }
+
+  /* 2. 좌우 컬럼 너비 100% */
+  .leftColumn,
+  .rightColumn,
+  .leftContent,
+  .rightContent,
+  .mapContainer,
+  .listContainer {
+    width: 100% !important;
+    flex: none !important;
+  }
+
+  /* 3. 컨텐츠 래퍼 여백 축소 */
+  .content-wrapper {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* 4. 폰트 사이즈 조절 */
+  html {
+    font-size: 14px;
+  }
+
+  /* 5. (Homepage) 그리드 1열로 */
+  .gridContainer {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* 6. (BookingPage) 좌석 맵 스크롤 가능하게 */
+  .seatMapContainer {
+    width: 100% !important;
+    overflow-x: auto; /* 좌석이 짤리면 스크롤 */
+  }
 }
