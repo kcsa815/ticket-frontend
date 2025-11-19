@@ -39,7 +39,7 @@ function SignUpPage() {
     try {
       // (2) 백엔드 API 호출
       const response = await axios.post<SignUpResponse>(
-        'http://localhost:8080/api/users/signup',
+        'https://musical-backend.onrender.com/api/users/signup',
         {
           email: email,
           password: password,

@@ -52,7 +52,7 @@ function AdminPage() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/musicals",
+        "https://musical-backend.onrender.com/api/musicals",
         formData
       );
       setSuccess(`뮤지컬(ID: ${response.data.musicalId}) 등록 성공!`);

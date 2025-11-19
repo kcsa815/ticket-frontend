@@ -76,8 +76,8 @@ function MusicalDetailPage() {
       setError("");
       try {
         // (API 2개 동시 호출)
-        const musicalApiUrl = `http://localhost:8080/api/musicals/${musicalId}`;
-        const performanceApiUrl = `http://localhost:8080/api/performances/musical/${musicalId}`;
+        const musicalApiUrl = `https://musical-backend.onrender.com/api/musicals/${musicalId}`;
+        const performanceApiUrl = `https://musical-backend.onrender.com/api/performances/musical/${musicalId}`;
 
         const [musicalResponse, performanceResponse] = await Promise.all([
           axios.get<MusicalDetail>(musicalApiUrl),
@@ -139,7 +139,7 @@ function MusicalDetailPage() {
           {/* 2-1. (상단) 포스터 + (나머지) 기본 정보 */}
           <section className={styles.topInfoSection}>
             <img
-              src={`http://localhost:8080${musical.posterImageUrl}`}
+              src={`https://musical-backend.onrender.com${musical.posterImageUrl}`}
               alt={musical.title}
               className={styles.posterImage}
             />

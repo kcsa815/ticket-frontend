@@ -32,7 +32,7 @@ function MusicalSection({ title, apiUrl, layoutType, viewAllLink }: Props) {
   useEffect(() => {
     const fetchMusicals = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080${apiUrl}`);
+        const response = await axios.get(`https://musical-backend.onrender.com`);
         
         // 홈페이지에 섹션을 5개씩 보여줌
         const sliceCount = 5;

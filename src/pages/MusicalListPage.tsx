@@ -26,7 +26,7 @@ function MusicalListPage() {
   const { userRole } = useAuth(); 
 
   useEffect(() => {
-    let apiUrl = 'http://localhost:8080/api/musicals'; // (기본 = 전체 목록)
+    let apiUrl = 'https://musical-backend.onrender.com/api/musicals'; // (기본 = 전체 목록)
     let pageTitle = '전체 뮤지컬';
 
     // (URL 경로에 따라 API 쿼리와 제목을 변경)
@@ -65,7 +65,7 @@ function MusicalListPage() {
     e.preventDefault(); 
     if (window.confirm("정말 이 뮤지컬을 삭제하시겠습니까?")) {
       try {
-        await axios.delete(`http://localhost:8080/api/musicals/${musicalId}`);
+        await axios.delete(`https://musical-backend.onrender.com/api/musicals/${musicalId}`);
         alert("삭제되었습니다.");
         setMusicals(prev => prev.filter(m => m.musicalId !== musicalId));
       } catch (err) {
@@ -89,7 +89,7 @@ function MusicalListPage() {
             
             <Link to={`/musical/${musical.musicalId}`}>
               <img 
-                src={`http://localhost:8080${musical.posterImageUrl}`}
+                src={`https://musical-backend.onrender.com${musical.posterImageUrl}`}
                 alt={musical.title}
                 className={styles.posterImage}
               />

@@ -47,7 +47,7 @@ function MyBookingsPage() {
       setError('');
       try {
         // (중요!) axios는 AuthContext가 설정한 토큰을 헤더에 자동으로 포함
-        const response = await axios.get<BookingResDto[]>('http://localhost:8080/api/bookings/my');
+        const response = await axios.get<BookingResDto[]>('https://musical-backend.onrender.com/api/bookings/my');
         setBookings(response.data);
       } catch (err) {
         console.error('예매 내역 조회 실패:', err);
@@ -75,7 +75,7 @@ function MyBookingsPage() {
 
     try {   //2. (중요!)백엔드 취소 API호출
       // AuthContext 가 토큰을 헤더에 자동으로 포함시킴
-      await axios.delete(`http://localhost:8080/api/bookings/${bookingId}`);
+      await axios.delete(`https://musical-backend.onrender.com/api/bookings/${bookingId}`);
 
       //3. API 호출 성공 시
       alert("예매가 성공적으로 취소되었습니다.");
@@ -123,7 +123,7 @@ function MyBookingsPage() {
                 
                 {/* 1. 왼쪽 (포스터) */}
                 <img 
-                  src={`http://localhost:8080${booking.performance.posterImageUrl}`}
+                  src={`https://musical-backend.onrender.com${booking.performance.posterImageUrl}`}
                   alt={booking.performance.musicalTitle}
                   className={styles.posterImage}
                 />

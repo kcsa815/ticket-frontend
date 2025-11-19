@@ -45,8 +45,8 @@ function AdminPerformancePage() {
     const fetchDropdownData = async () => {
       try {
         const [musicalsRes, venuesRes] = await Promise.all([
-          axios.get<Musical[]>('http://localhost:8080/api/musicals'),
-          axios.get<Venue[]>('http://localhost:8080/api/venues')
+          axios.get<Musical[]>('https://musical-backend.onrender.com/api/musicals'),
+          axios.get<Venue[]>('https://musical-backend.onrender.com/api/venues')
         ]);
         setMusicals(musicalsRes.data);
         setVenues(venuesRes.data);
@@ -92,7 +92,7 @@ function AdminPerformancePage() {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/performances',
+        'https://musical-backend.onrender.com/api/performances',
         formData
       );
       setSuccess(`공연 회차(ID: ${response.data}) 등록 성공!`);

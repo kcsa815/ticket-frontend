@@ -19,7 +19,7 @@ function LoginPage() {
     setError('');
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/users/login', 
+        'https://musical-backend.onrender.com/api/users/login', 
         { email, password }
       );
       const accessToken = response.data.accessToken;

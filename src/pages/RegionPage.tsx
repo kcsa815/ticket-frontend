@@ -61,7 +61,7 @@ function RegionPage() {
 
     axios
       .get(
-        `http://localhost:8080/api/performances/region?name=${regionNameEng}`
+        `https://musical-backend.onrender.com/api/performances/region?name=${regionNameEng}`
       )
       .then((res) => {
         setPerformances(res.data);
@@ -150,7 +150,7 @@ function RegionPage() {
                       
                       {/* (포스터 이미지) */}
                       <img 
-                        src={`http://localhost:8080${perf.posterImageUrl}`} 
+                        src={`https://musical-backend.onrender.com${perf.posterImageUrl}`} 
                         alt={perf.musicalTitle} 
                         className={styles.posterThumb}
                       />
