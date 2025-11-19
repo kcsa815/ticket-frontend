@@ -13,6 +13,8 @@ interface ErrorResponse {
   message: string;
 }
 
+const API_BASE_URL = "https://musical-backend.onrender.com";
+
 function SignUpPage() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -38,8 +40,8 @@ function SignUpPage() {
 
     try {
       // (2) 백엔드 API 호출
-      const response = await axios.post<SignUpResponse>(
-        'https://musical-backend.onrender.com/api/users/signup',
+      const response = await axios.post(
+        `${API_BASE_URL}/api/users/signup`,
         {
           email: email,
           password: password,
