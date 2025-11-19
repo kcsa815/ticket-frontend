@@ -48,9 +48,6 @@ function Header() {
               <GrUserAdmin />
               공연 회차 등록
             </Link>
-            <Link to="/admin/add-venue" className={styles.adminButton}>
-              <GrUserAdmin /> 극장 등록
-            </Link>
           </>
         )}
 

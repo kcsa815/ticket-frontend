@@ -34,7 +34,7 @@ function AdminMusicalEditPage() {
     const fetchMusicalData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8080/api/musicals/${musicalId}`
+          `https://musical-backend.onrender.com`
         );
         const data = response.data; 
         
@@ -90,7 +90,7 @@ function AdminMusicalEditPage() {
 
     try {
       await axios.put(
-        `http://localhost:8080/api/musicals/${musicalId}`,
+        `https://musical-backend.onrender.com`,
         formData
       );
       setSuccess(`뮤지컬(ID: ${musicalId}) 수정 성공!`);
@@ -127,7 +127,7 @@ function AdminMusicalEditPage() {
               <img src={previewUrl} alt="새 포스터 미리보기" />
             ) : 
             currentPosterUrl ? (
-              <img src={`http://localhost:8080${currentPosterUrl}`} alt="현재 포스터" />
+              <img src={`https://musical-backend.onrender.com`} alt="현재 포스터" />
             ) : (
               <span>포스터 (클릭하여 변경)</span>
             )}

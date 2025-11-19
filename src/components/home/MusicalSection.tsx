@@ -64,7 +64,7 @@ function MusicalSection({ title, apiUrl, layoutType, viewAllLink }: Props) {
             
             <Link to={`/musical/${musical.musicalId}`}>
               <img 
-                src={`http://localhost:8080${musical.posterImageUrl}`}
+                src={`https://musical-backend.onrender.com`}
                 alt={musical.title}
                 className={styles.posterImage}
               />
