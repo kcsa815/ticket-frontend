@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
 import axios, { AxiosError } from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
-import styles from './SignUpPage.module.css'; // 👈 (새로운 CSS 임포트)
+import { useNavigate } from 'react-router-dom';
+import styles from './SignUpPage.module.css'; 
 
-// (백엔드 DTO와 타입을 맞춥니다)
 interface SignUpResponse {
   userId: number;
   email: string;
   username: string;
 }
-interface ErrorResponse {
-  message: string;
-}
+interface ErrorResponse { message: string; }
 
-const API_BASE_URL = "https://musical-backend.onrender.com";
+// Render 백엔드 주소 
+const API_BASE_URL = "https://musical-backend.onrender.com"; 
 
 function SignUpPage() {
   const [email, setEmail] = useState('');
@@ -25,12 +23,10 @@ function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // (폼 제출 핸들러)
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // 새로고침 방지
     setError('');
 
-    // (1) 비밀번호 확인
     if (password !== confirmPassword) {
       setError('비밀번호가 일치하지 않습니다.');
       return;
@@ -39,9 +35,11 @@ function SignUpPage() {
     setIsLoading(true);
 
     try {
-      // (2) 백엔드 API 호출
-      const response = await axios.post(
-        `${API_BASE_URL}/api/users/signup`,
+      //  백엔드 주소로 POST 요청
+      console.log("API 요청 시작:", `${API_BASE_URL}/api/users/signup`); // (디버깅용 로그)
+      
+      const response = await axios.post<SignUpResponse>(
+        `${API_BASE_URL}/api/users/signup`, 
         {
           email: email,
           password: password,
@@ -49,23 +47,19 @@ function SignUpPage() {
         }
       );
 
-      // (3) 회원가입 성공
       console.log('회원가입 성공:', response.data);
       alert('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
-      
-      // (4) 로그인 페이지로 이동
       navigate('/login');
 
     } catch (err) {
-      // (4) 회원가입 실패 (예: 이메일 중복)
       console.error('회원가입 실패:', err);
       if (axios.isAxiosError<ErrorResponse>(err) && err.response) {
         setError(err.response.data.message || '회원가입에 실패했습니다.');
       } else {
-        setError('알 수 없는 오류가 발생했습니다.');
+        setError('알 수 없는 오류가 발생했습니다. (서버가 깨어나는 중일 수 있습니다)');
       }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); //  무조건 로딩 끄기
     }
   };
 
@@ -77,52 +71,28 @@ function SignUpPage() {
           
           <div className={styles.formGroup}>
             <label htmlFor="email">이메일</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
           
           <div className={styles.formGroup}>
             <label htmlFor="username">이름 (닉네임)</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
+            <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="password">비밀번호</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="confirmPassword">비밀번호 확인</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
+            <input type="password" id="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
           </div>
 
           {error && <p className={styles.error}>{error}</p>}
           
           <button type="submit" className={styles.signupButton} disabled={isLoading}>
-            {isLoading ? '가입 중...' : '회원가입'}
+            {isLoading ? '가입 중... (최대 1분 소요)' : '회원가입'}
           </button>
         </form>
       </div>
