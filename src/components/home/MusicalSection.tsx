@@ -59,7 +59,7 @@ function MusicalSection({ title, apiUrl, layoutType, viewAllLink }: Props) {
       
       {/* (그리드) */}
       <div className={styles.gridContainer}>
-        {musicals.map((musical) => (
+        {musicals && Array.isArray(musicals) && musicals.map((musical) => (
           <div key={musical.musicalId} className={styles.musicalCard}>
             
             <Link to={`/musical/${musical.musicalId}`}>
