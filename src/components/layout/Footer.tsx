@@ -26,10 +26,9 @@ function Footer() {
           </div>
         </div>
         <div className={styles.footerBottom}>
-          (주)놀유니버스는 일부 상품의 통신판매중개자로서 통신판매의 당사자가
-          아니므로, 상품의 예약, 이용 및 환불 등 거래와 관련된 의무와 책임은
-          판매자에게 있으며 (주)놀유니버스는 일체 책임을 지지 않습니다.
-          <br />ⓒ Nol Universe Co., Ltd. All rights reserved
+          사진 참조 https://nol.interpark.com/ticket |  헤더 로고 생성 ChatGPT
+          <br />
+          © 2025 ^^ㅣㄱ뮤. All rights reserved.
         </div>
       </div>
     </footer>
