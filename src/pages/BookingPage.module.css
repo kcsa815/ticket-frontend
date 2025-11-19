@@ -1,16 +1,12 @@
 .modalContent {
-  /* (Req 4) 이것이 팝업 창의 '본체' 스타일입니다 */
+  /*팝업 창의 '본체' 스타일*/
   width: 1000px; /* (최대 900px, 90%) */
-  height: 700px;
+  height: 698px;
   max-width: 90%;
   /* max-height: 90vh; */
   overflow-y: auto; /* (중요) 스크롤은 여기서 */
-  
   background: #fff;
-  border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-
-  /* (주의!) padding: 0; (상단 바가 꽉 차도록) */
   padding: 0; 
 }
 
@@ -29,7 +25,7 @@
 /* (Req 1) 왼쪽 "좌석선택" (빨강) */
 .topBarTitle {
   flex: 1; /* 1의 비율 */
-  background: #d9534f;
+  background: #780400;
   color: white;
   padding: 20px;
   font-size: 1.5rem;
@@ -73,26 +69,28 @@
 /* (좌석맵 컨테이너) */
 .seatMapContainer {
   position: relative;
-  width: 100%;
-  height: 570px; /*좌석 사진 높이*/
+  /* width: 100%; (제거하거나 고정값 사용) */
+  width: 600px; 
+  height: 540px; 
+  margin: 20px auto;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
-  background-image: url('/theater3.png'); /* (public 폴더의 배경 이미지) */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  
+  /* (배경 이미지 설정) */
+  background-image: url('/venue.png');
+  /* background-size: contain; */
+  /* background-repeat: no-repeat; */
+  /* background-position: center; */
+
+  overflow: auto; /* (삐져나가면 스크롤바 생김 - 안전장치) */
 }
 
 /* --- 개별 좌석 버튼 (자식) --- */
 .seat {
-  position: absolute; /* X, Y 좌표로 배치됨 */
-  
-  /* (디자인) 좌석 버튼 크기/모양 */
-  width: 20px; 
-  height: 20px;
-  border-radius: 4px;
-  font-size: 0.6rem; /* 폰트 최소화 (숫자만 보이게) */
-  
+  position: absolute;
+  width: 14px; 
+  height: 14px; 
+  font-size: 2px; /* 글자 크기도 축소 */
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   
@@ -107,28 +105,27 @@
 
 /* --- 등급별 색상 --- */
 .seat.VIP {
-  background-color: #c93d79; 
-  border-color: #a33162;
+  background-color: #673dc9; 
+  border-color: #673dc9;
   color: white;
 }
 .seat.R {
-  background-color: #4a9ff5;
-  border-color: #3b7fce;
+  background-color: #35d13f;
+  border-color: #35d13f;
   color: white;
 }
 .seat.S {
-  background-color: #5cb85c; 
-  border-color: #4cae4c;
+  background-color: #27a4e3; 
+  border-color: #27a4e3;
   color: white;
 }
 .seat.A {
-  background-color: #f0ad4e;
+  background-color: #f39d23;
   border-color: #eea236;
   color: white;
 }
 
 /* ---선택된 좌석 스타일--- */
-/* (등급 색상을 덮어써야 함) */
 .seat.selected {
   background-color: #6c757d;
   color: white;
@@ -146,7 +143,7 @@
   transform: scale(1); /* (효과 없음) */
 }
 
-/* (Req 3) 오른쪽 (좌석 정보) */
+/* 오른쪽 (좌석 정보) */
 .rightContent {
   flex: 1; /* 1의 비율 */
   width: 0;

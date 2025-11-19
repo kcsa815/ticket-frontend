@@ -12,8 +12,8 @@ interface PerformanceSeat {
   seatGrade: string;
   price: number;
   isReserved: boolean;
-  xCoord: number;
-  yCoord: number;
+  xcoord: number; 
+  ycoord: number;
 }
 interface PerformanceDetail {
   performanceId: number;
@@ -49,16 +49,16 @@ const customModalStyles: Modal.Styles = {
   // 1. 뒷 배경 (오버레이)
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    display: 'flex', // 👈 (필수!) 팝업을 중앙 정렬
+    display: 'flex', 
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2000,
   },
   // 2. 모달 창 본체 (팝업)
   content: {
-    position: 'relative', // 👈 (필수!)
-    inset: 'auto', // 👈 (필수!)
-    padding: '0', // 👈 (필수!) 패딩 제거
+    position: 'relative', 
+    inset: 'auto', 
+    padding: '0', 
     border: 'none',
     background: 'none',
     width: 'auto', // (너비는 Draggable이 제어)
@@ -85,14 +85,18 @@ function BookingPage({ isOpen, onClose, performanceId }: BookingPageProps) {
     if (isOpen && performanceId) {
       
       const fetchPerformanceDetails = async () => {
-        setLoading(true); // (API 호출 '직전'에 로딩 시작)
-        setError('');
-        setSelectedSeatIds(new Set()); 
-        
+        setLoading(true);
+        // ...
         try {
           const response = await axios.get<PerformanceDetail>(
             `http://localhost:8080/api/performances/${performanceId}`
           );
+          
+          // --- 👇👇👇 [여기! 로그 추가] ---
+          console.log("✅ 백엔드 응답 데이터:", response.data);
+          console.log("✅ 첫 번째 좌석 좌표:", response.data.seats[0]);
+          // --- 👆👆👆 ---
+          
           setPerformance(response.data);
         } catch (err) {
           // (에러 처리)
@@ -269,18 +273,15 @@ function BookingPage({ isOpen, onClose, performanceId }: BookingPageProps) {
                       
                       return (
                         <button
-                          // --- 👇 [수정!] key 오타 수정 ---
                           key={seat.performanceSeatId} 
-                          // --- 👆 ---
                           className={seatClass}
                           onClick={() => handleSeatClick(seat)}
                           disabled={seat.isReserved || isBookingLoading}
                           style={{
-                            left: `${seat.xCoord}px`,
-                            top: `${seat.yCoord}px`,
+                            left: `${seat.xcoord + 30}px`,  /* 오른쪽으로 30px 이동 */
+                            top: `${seat.ycoord + 130}px`,   /* 아래쪽으로 130px 이동 */
                           }}
                         >
-                          {seat.seatNumber}
                         </button>
                       );
                     })}

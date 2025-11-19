@@ -1,157 +1,183 @@
-// import React, { useState } from "react";
-// import axios, { AxiosError } from "axios";
-// import { Link } from "react-router-dom";
-// import {
-//   Annotation,
-//   ComposableMap,
-//   Geographies,
-//   Geography,
-//   ZoomableGroup,
-// } from "react-simple-maps";
-// import styles from "./RegionPage.module.css";
+import React, { useState } from "react";
+import axios, { AxiosError } from "axios";
+import { Link } from "react-router-dom"; // 👈 Link 임포트 확인
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  ZoomableGroup,
+  Annotation,
+} from "react-simple-maps";
+import styles from "./RegionPage.module.css";
 
-// // (1) 백엔드 DTO 타입
-// interface PerformanceSimple {
-//   musicalTitle: string;
-//   performanceId: number;
-//   performanceDate: string;
-//   venueName: string;
-// }
-// interface ErrorResponse {
-//   message: string;
-// }
+// (1) 백엔드 DTO 타입 (필드 추가됨)
+interface PerformanceSimple {
+  musicalTitle: string;
+  performanceId: number;
+  performanceDate: string;
+  venueName: string;
+  musicalId: number; // 👈 [신규]
+  posterImageUrl: string; // 👈 [신규]
+}
+interface ErrorResponse { message: string; }
 
-// // (2) 지도 데이터 파일 경로 (public 폴더 기준)
-// const KOREA_TOPO_JSON = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2018/json/skorea-provinces-2018-geo.json";
+const KOREA_TOPO_JSON = "/korea-provinces-topo.json";
+const REGION_ENGLISH_NAME: { [key: string]: string } = {
+  "서울특별시": "SEOUL",
+  "부산광역시": "BUSAN",
+  "대구광역시": "DAEGU",
+  "인천광역시": "INCHEON",
+  "광주광역시": "GWANGJU",
+  "대전광역시": "DAEJEON",
+  "울산광역시": "ULSAN",
+  "세종특별자치시": "SEJONG",
+  "경기도": "GYEONGGI",
+  "강원도": "GANGWON",
+  "충청북도": "CHUNGBUK",
+  "충청남도": "CHUNGNAM",
+  "전라북도": "JEONBUK",
+  "전라남도": "JEONNAM",
+  "경상북도": "GYEONGBUK",
+  "경상남도": "GYEONGNAM",
+  "제주특별자치도": "JEJU",
+  "강원특별자치도": "GANGWON",
+  "전북특별자치도": "JEONBUK",
+};
 
-// function RegionPage() {
-//   const [selectedRegionKr, setSelectedRegionKr] = useState<string | null>(null);
-//   const [performances, setPerformances] = useState<PerformanceSimple[]>([]);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [error, setError] = useState("");
+function RegionPage() {
+  const [selectedRegionKr, setSelectedRegionKr] = useState<string | null>(null);
+  const [performances, setPerformances] = useState<PerformanceSimple[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-//   // (3) 지도에서 지역 클릭 시
-//   const handleRegionClick = (geo: any) => {
-//   // 🔍 디버깅: 전체 속성 출력
-//   console.log("=== 클릭한 지역의 properties ===");
-//   console.log(JSON.stringify(geo.properties, null, 2));
-  
-//   // 기존 코드...
-//   const regionNameEng = geo.properties.name || geo.properties.CTP_ENG_NM || "DEFAULT"; 
-//   const regionNameKor = geo.properties.nameKr || geo.properties.CTP_KOR_NM || regionNameEng;
-  
-//   console.log("🔹 영어 이름:", regionNameEng);
-//   console.log("🔹 한글 이름:", regionNameKor);
-//   console.log("🔹 API 요청 URL:", `http://localhost:8080/api/performances/region?name=${regionNameEng.toUpperCase()}`);
+  const handleRegionClick = (geo: any) => {
+    const rawName = geo.properties.name || geo.properties.CTP_KOR_NM || geo.properties.nameKr || "DEFAULT";
+    const regionNameKor = rawName;
+    const regionNameEng = REGION_ENGLISH_NAME[regionNameKor] || "DEFAULT";
 
-//   setSelectedRegionKr(regionNameKor);
-//   setIsLoading(true);
-//   setError("");
+    setSelectedRegionKr(regionNameKor);
+    setIsLoading(true);
+    setError("");
 
-//   axios
-//     .get(
-//       (`http://localhost:8080/api/performances/region?name=${regionName}`)
-//     )
-//     .then((res) => {
-//       console.log("✅ API 응답 성공:", res.data);
-//       setPerformances(res.data);
-//     })
-//     .catch((err) => {
-//       console.error("❌ API 응답 실패:", err);
-//       console.error("❌ 에러 상세:", err.response?.data);
-//       setPerformances([]);
-//       setError("공연 정보를 불러오는 데 실패했습니다.");
-//     })
-//     .finally(() => setIsLoading(false));
-// };
+    axios
+      .get(
+        `http://localhost:8080/api/performances/region?name=${regionNameEng}`
+      )
+      .then((res) => {
+        setPerformances(res.data);
+      })
+      .catch((err) => {
+        console.error("지역별 공연 로드 실패:", err);
+        setPerformances([]);
+        setError("공연 정보를 불러오는 데 실패했습니다.");
+      })
+      .finally(() => setIsLoading(false));
+  };
 
-//   return (
-//     <div className={`content-wrapper ${styles.pageContainer}`}>
-//       <h2 className={styles.pageTitle}>지역별 공연</h2>
+  return (
+    <div className={`content-wrapper ${styles.pageContainer}`}>
+      <h2 className={styles.pageTitle}>지역별 공연</h2>
 
-//       <div className={styles.mainLayout}>
-//         {/* 1. 왼쪽 (지도) */}
-//         <div className={styles.mapContainer}>
-//           <ComposableMap
-//             projection="geoMercator"
-//             projectionConfig={{
-//               scale: 5500, // (지도 축척 - "경도/위도" 파일일 경우)
-//               center: [127.7669, 36.5], // (지도 중심: 대한민국)
-//             }}
-//             // (CSS가 크기를 100%로 제어하도록 style만 남김)
-//             style={{ width: "100%", height: "auto" }}
-//           >
+      <div className={styles.mainLayout}>
+        {/* 1. 왼쪽 (지도) - 동일 */}
+        <div className={styles.mapContainer}>
+          <ComposableMap
+            projection="geoMercator"
+            projectionConfig={{ scale: 5500, center: [127.7669, 36.5] }}
+            style={{ width: "100%", height: "auto" }}
+          >
+            <ZoomableGroup center={[127.7669, 36.5]} zoom={1}>
+              <Geographies geography={KOREA_TOPO_JSON}>
+                {({ geographies }) =>
+                  geographies.map((geo) => {
+                    const rawName = geo.properties.name || geo.properties.CTP_KOR_NM || "DEFAULT";
+                    const isSelected = selectedRegionKr === rawName;
+                    return (
+                      <Geography
+                        key={geo.rsmKey}
+                        geography={geo}
+                        onClick={() => handleRegionClick(geo)}
+                        className={isSelected ? styles.geoSelected : styles.geoDefault}
+                      />
+                    );
+                  })
+                }
+              </Geographies>
+              <Geographies geography={KOREA_TOPO_JSON}>
+                {({ geographies }) =>
+                  geographies.map((geo) => {
+                    const regionNameKor = geo.properties.name || geo.properties.CTP_KOR_NM || "";
+                    const center = geo.properties.center;
+                    if (!center || !regionNameKor) return null;
+                    return (
+                      <Annotation
+                        key={`${geo.rsmKey}-text`}
+                        subject={center}
+                        dx={0} dy={0}
+                        connectorProps={{ stroke: "none" }}
+                      >
+                        <text
+                          fontSize={10} textAnchor="middle" fill="#333"
+                          style={{ pointerEvents: "none", fontWeight: "bold" }}
+                        >
+                          {regionNameKor}
+                        </text>
+                      </Annotation>
+                    );
+                  })
+                }
+              </Geographies>
+            </ZoomableGroup>
+          </ComposableMap>
+        </div>
 
-//             <ZoomableGroup center={[127.7669, 36.5]} zoom={1}>
-              
-//               {/* (1) 지도 (안으로 이동) */}
-//               <Geographies geography={KOREA_TOPO_JSON}>
-//                 {({ geographies }) =>
-//                   geographies.map((geo) => {
-//                     const regionNameEng = geo.properties.name || geo.properties.CTP_ENG_NM || "DEFAULT";
-//                     const regionNameKor = geo.properties.nameKr || geo.properties.CTP_KOR_NM || regionNameEng;
-//                     const isSelected = selectedRegionKr === regionNameKor;
+        {/* 2. 오른쪽 (공연 목록) - 수정! */}
+        <div className={styles.listContainer}>
+          <h3>{selectedRegionKr || "지도에서 지역을 선택하세요"}</h3>
 
-//                     return (
-//                       <Geography
-//                         key={geo.rsmKey}
-//                         geography={geo}
-//                         onClick={() => handleRegionClick(geo)}
-//                         className={
-//                           isSelected ? styles.geoSelected : styles.geoDefault
-//                         }
-//                       />
-//                     );
-//                   })
-//                 }
-//               </Geographies>
-
-//               {/* (지도 데이터를 한 번 더 순회하며 "글자"만 렌더링) */}
-//               <Geographies geography={KOREA_TOPO_JSON}>
-//                 {({ geographies }) =>
-//                   geographies.map((geo) => {
-//                     const regionNameKor = geo.properties.nameKr || geo.properties.CTP_KOR_NM || "N/A";
+          {isLoading ? (
+            <p>공연 목록을 불러오는 중...</p>
+          ) : error ? (
+            <p style={{ color: "red" }}>{error}</p>
+          ) : (
+            <ul className={styles.performanceList}>
+              {performances.length > 0 ? (
+                performances.map((perf) => (
+                  <li key={perf.performanceId} className={styles.performanceItem}>
                     
-//                     // (Annotation을 위한 좌표 찾기 - GeoJSON 형식에 따라 다름)
-//                     // (여기서는 'properties.center'를 사용한다고 가정, 
-//                     //  없다면 path.centroid(geo) 등 다른 방법 사용 필요)
-//                     const center = geo.properties.center || [0, 0]; 
+                    {/* --- 👇 [핵심 수정!] Link로 감싸고 포스터 추가 --- */}
+                    <Link to={`/musical/${perf.musicalId}`} className={styles.itemLink}>
+                      
+                      {/* (포스터 이미지) */}
+                      <img 
+                        src={`http://localhost:8080${perf.posterImageUrl}`} 
+                        alt={perf.musicalTitle} 
+                        className={styles.posterThumb}
+                      />
+                      
+                      {/* (텍스트 정보) */}
+                      <div className={styles.itemInfo}>
+                        <strong>{perf.musicalTitle}</strong>
+                        <p>{perf.venueName}</p>
+                        <span className={styles.date}>
+                          {new Date(perf.performanceDate).toLocaleDateString()} {new Date(perf.performanceDate).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </span>
+                      </div>
 
-//                     return (
-//                       <Annotation
-//                         key={geo.rsmKey}
-//                         subject={center}
-//                         dx={0}
-//                         dy={0}
-//                         connectorProps={{ stroke: "none" }} // (연결선 없음)
-//                       >
-//                         {/* (글자 스타일) */}
-//                         <text
-//                           fontSize={4} 
-//                           textAnchor="middle"
-//                           fill="#FFFFFF" // (흰색 글자)
-//                           style={{ pointerEvents: "none" }} // (글자가 클릭 방해 안 하도록)
-//                         >
-//                           {regionNameKor}
-//                         </text>
-//                       </Annotation>
-//                     );
-//                   })
-//                 }
-//               </Geographies>
-//             </ZoomableGroup>
-//           </ComposableMap>
-//         </div>
+                    </Link>
+                    {/* --- 👆 --- */}
 
-//         {/* 2. 오른쪽 (공연 목록) */}
-//         <div className={styles.listContainer}>
-//           <h3>{selectedRegionKr || "지도에서 지역을 선택하세요"}</h3>
+                  </li>
+                ))
+              ) : (
+                <p>선택한 지역에 공연 정보가 없습니다.</p>
+              )}
+            </ul>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
-//           {/* ... (isLoading, error, performances.map(...) - 100% 동일) ... */}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default RegionPage;
+export default RegionPage;

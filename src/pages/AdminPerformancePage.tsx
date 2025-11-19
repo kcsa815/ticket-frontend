@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
-
-// --- 👇 [1. (핵심!) CSS Import 경로 변경] ---
-import styles from './AdminPerformancePage.module.css'; 
-// --- 👆 ---
+import styles from './AdminPerformancePage.module.css';
 
 // (Interface 정의)
 interface Venue {
@@ -118,9 +115,7 @@ function AdminPerformancePage() {
   };
 
   
-  // --- 👇 [2. (핵심!) JSX가 "1단 CSS" 클래스를 사용하도록 수정] ---
   return (
-    // [수정!] 2단 레이아웃 클래스(mainLayout 등) 제거
     <div className={`content-wrapper ${styles.pageContainer}`}> 
       
       <h2 className={styles.pageTitle}>관리자: 새 공연 회차 등록</h2>

@@ -45,19 +45,22 @@
 }
 
 
-/* (2) 오른쪽 (공연 목록) */
+/* 2. 오른쪽 (공연 목록) */
 .listContainer {
-  flex: 1; /* 1의 비율 */
-  max-height: 600px; /* (지도 높이와 비슷하게) */
+  flex: 1;
+  max-height: 600px;
   overflow-y: auto;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
+  background-color: #fff; /* 배경색 추가 */
 }
 .listContainer h3 {
   margin: 0 0 15px;
   padding-bottom: 10px;
   border-bottom: 2px solid #f0f0f0;
+  font-size: 1.2rem;
+  color: #333;
 }
 
 .performanceList {
@@ -66,19 +69,56 @@
   margin: 0;
 }
 
+/* --- 👇 [수정!] 목록 아이템 스타일 (Flex 레이아웃) --- */
 .performanceItem {
   border-bottom: 1px solid #eee;
-  padding: 10px 5px;
+  padding: 15px 0;
+  transition: background-color 0.2s;
 }
 .performanceItem:last-child {
   border-bottom: none;
 }
-.performanceItem strong {
+.performanceItem:hover {
+  background-color: #f9f9f9; /* 마우스 올리면 살짝 회색 */
+}
+
+/* (링크 태그가 flex 컨테이너가 됨) */
+.itemLink {
+  display: flex;
+  text-decoration: none;
+  color: inherit;
+  gap: 15px; /* 포스터와 텍스트 사이 간격 */
+  align-items: flex-start;
+}
+
+/* (포스터 썸네일) */
+.posterThumb {
+  width: 60px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #eee;
+  flex-shrink: 0; /* 찌그러짐 방지 */
+}
+
+/* (텍스트 정보 영역) */
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.itemInfo strong {
   font-size: 1.1rem;
   color: #333;
+  line-height: 1.2;
 }
-.performanceItem p {
+.itemInfo p {
   font-size: 0.9rem;
   color: #666;
-  margin: 5px 0;
+  margin: 0;
+}
+.itemInfo .date {
+  font-size: 0.85rem;
+  color: #999;
 }
