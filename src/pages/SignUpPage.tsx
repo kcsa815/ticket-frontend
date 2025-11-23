@@ -11,7 +11,7 @@ interface SignUpResponse {
 interface ErrorResponse { message: string; }
 
 // Render 백엔드 주소 
-const API_BASE_URL = "https://musical-backend.onrender.com"; 
+const API_BASE_URL = "http://localhost:8080"; 
 
 function SignUpPage() {
   const [email, setEmail] = useState('');

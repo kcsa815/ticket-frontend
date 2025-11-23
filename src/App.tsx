@@ -7,7 +7,7 @@ import LoginPage from './pages/LoginPage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import AdminPage from './pages/AdminPage';
 import AdminPerformancePage from './pages/AdminPerformancePage';
-import AdminMusicalEditPage from './pages/AdminMusicalEditPage'; // (이것도 임포트 필요)
+import AdminMusicalEditPage from './pages/AdminMusicalEditPage'; 
 import MusicalListPage from './pages/MusicalListPage';
 import RegionPage from './pages/RegionPage'; 
 import SignUpPage from './pages/SignUpPage';
@@ -19,6 +19,7 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import './App.css'; 
+import MusicalSection from './components/home/MusicalSection';
 
 // ---  "임시" VenuesPage 선언만 남김] ---
 const VenuesPage = () => <div><h2>공연장 목록 페이지(준비중)</h2></div>;
@@ -44,6 +45,10 @@ function App() {
           <Route path='/sales' element={<MusicalListPage />} />
           <Route path='/region' element={<RegionPage />} /> 
           <Route path='/venues' element={<VenuesPage />} />
+
+          {/* <Route path='/rankings' element={<MusicalSection />} />
+          <Route path='/coming-soon' element={<MusicalListPage />} />
+          <Route path='/sales' element={<MusicalListPage />} /> */}
             
           {/* --- 보호된 경로 (USER) --- */}
           <Route 

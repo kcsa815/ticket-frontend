@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios, { AxiosError } from "axios";
-import { Link } from "react-router-dom"; // 👈 Link 임포트 확인
+import { Link } from "react-router-dom";
 import {
   ComposableMap,
   Geographies,
@@ -16,8 +16,8 @@ interface PerformanceSimple {
   performanceId: number;
   performanceDate: string;
   venueName: string;
-  musicalId: number; // 👈 [신규]
-  posterImageUrl: string; // 👈 [신규]
+  musicalId: number; 
+  posterImageUrl: string; 
 }
 interface ErrorResponse { message: string; }
 
@@ -61,7 +61,7 @@ function RegionPage() {
 
     axios
       .get(
-        `https://musical-backend.onrender.com/api/performances/region?name=${regionNameEng}`
+        `http://localhost:8080/api/performances/region?name=${regionNameEng}`
       )
       .then((res) => {
         setPerformances(res.data);
@@ -145,12 +145,12 @@ function RegionPage() {
                 performances.map((perf) => (
                   <li key={perf.performanceId} className={styles.performanceItem}>
                     
-                    {/* --- 👇 [핵심 수정!] Link로 감싸고 포스터 추가 --- */}
+                    {/* --- Link로 감싸고 포스터 추가 --- */}
                     <Link to={`/musical/${perf.musicalId}`} className={styles.itemLink}>
                       
                       {/* (포스터 이미지) */}
                       <img 
-                        src={`https://musical-backend.onrender.com${perf.posterImageUrl}`} 
+                        src={`http://localhost:8080${perf.posterImageUrl}`} 
                         alt={perf.musicalTitle} 
                         className={styles.posterThumb}
                       />
@@ -165,7 +165,6 @@ function RegionPage() {
                       </div>
 
                     </Link>
-                    {/* --- 👆 --- */}
 
                   </li>
                 ))

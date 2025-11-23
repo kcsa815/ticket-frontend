@@ -32,7 +32,12 @@ function AdminPerformancePage() {
     musicalId: null,
     venueId: null,
     performanceDate: '',
-    pricesByGrade: {},
+    pricesByGrade: {
+      'VIP': 150000, 
+      'R': 130000,
+      'S': 100000,
+      'A': 80000,
+    },
   });
   const [musicals, setMusicals] = useState<Musical[]>([]);
   const [venues, setVenues] = useState<Venue[]>([]);
@@ -45,8 +50,8 @@ function AdminPerformancePage() {
     const fetchDropdownData = async () => {
       try {
         const [musicalsRes, venuesRes] = await Promise.all([
-          axios.get<Musical[]>('https://musical-backend.onrender.com/api/musicals'),
-          axios.get<Venue[]>('https://musical-backend.onrender.com/api/venues')
+          axios.get<Musical[]>('http://localhost:8080/api/musicals'),
+          axios.get<Venue[]>('http://localhost:8080/api/venues')
         ]);
         setMusicals(musicalsRes.data);
         setVenues(venuesRes.data);
@@ -92,7 +97,7 @@ function AdminPerformancePage() {
 
     try {
       const response = await axios.post(
-        'https://musical-backend.onrender.com/api/performances',
+        'http://localhost:8080/api/performances',
         formData
       );
       setSuccess(`공연 회차(ID: ${response.data}) 등록 성공!`);
@@ -184,19 +189,19 @@ function AdminPerformancePage() {
           <legend>등급별 가격</legend>
           <div>
             <label htmlFor="VIP">VIP</label>
-            <input id="VIP" name="VIP" type="number" onChange={handlePriceChange} placeholder="150000" />
+            <input id="VIP" name="VIP" type="number" onChange={handlePriceChange} value={formData.pricesByGrade.VIP || ''} placeholder="150000" />
           </div>
           <div>
             <label htmlFor="R">R</label>
-            <input id="R" name="R" type="number" onChange={handlePriceChange} placeholder="130000" />
+            <input id="R" name="R" type="number" onChange={handlePriceChange} value={formData.pricesByGrade.R || ''} placeholder="130000" />
           </div>
           <div>
             <label htmlFor="S">S</label>
-            <input id="S" name="S" type="number" onChange={handlePriceChange} placeholder="100000" />
+            <input id="S" name="S" type="number" onChange={handlePriceChange} value={formData.pricesByGrade.S || ''} placeholder="100000" />
           </div>
           <div>
             <label htmlFor="A">A</label>
-            <input id="A" name="A" type="number" onChange={handlePriceChange} placeholder="80000" />
+            <input id="A" name="A" type="number" onChange={handlePriceChange} value={formData.pricesByGrade.A || ''} placeholder="80000" />
           </div>
         </fieldset>
         

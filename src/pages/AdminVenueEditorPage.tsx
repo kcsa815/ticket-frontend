@@ -290,7 +290,7 @@ const SeatLayoutEditor = () => {
     try {
       // (3) API 호출
       const response = await axios.post(
-        'https://musical-backend.onrender.com/api/venues',
+        'http://localhost:8080/api/venues',
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
