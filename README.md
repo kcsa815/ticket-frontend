@@ -17,16 +17,16 @@
 ## ✨ Frontend Key Features
 
 ### 1. 좌석 시스템 시각화 및 UX
-<img width="2766" height="1421" alt="image" src="https://github.com/user-attachments/assets/a7ef2a1d-bbcf-4f22-8338-dc04801452fb" />
+<img width="600" height="auto" alt="image" src="https://github.com/user-attachments/assets/a7ef2a1d-bbcf-4f22-8338-dc04801452fb" />
 <p>**절대 좌표 렌더링:** 데이터베이스의 `xCoord, yCoord` 값을 이용한 정밀한 좌석 배치</p>
 <p>**모달 UX:** Draggable Modal을 활용하여 사용자가 좌석 선택 중 화면을 자유롭게 이동할 수 있도록 구현</p>
 
 ### 2. 인터랙티브 지역별 조회
-<img width="1940" height="1157" alt="image" src="https://github.com/user-attachments/assets/40b6562b-328c-4212-a212-1bf7342b4372" />
+<img width="600" height="auto" alt="image" src="https://github.com/user-attachments/assets/40b6562b-328c-4212-a212-1bf7342b4372" />
 <p>**GeoJSON 처리:** `react-simple-maps`를 이용해 지도 데이터를 시각화하고, 클릭한 지역(예: SEOUL)에 해당하는 데이터만 실시간으로 필터링하여 출력.</p>
 
 ### 3. 관리자 포스터 에디터
-<img width="1880" height="1303" alt="image" src="https://github.com/user-attachments/assets/3de3d64c-df54-4862-bd42-fb583bc64fac" />
+<img width="600" height="auto" alt="image" src="https://github.com/user-attachments/assets/3de3d64c-df54-4862-bd42-fb583bc64fac" />
 <p>**File I/O Abstraction:** `Blob` 객체와 `FormData`를 활용하여 복잡한 이미지 파일과 JSON 데이터를 동시에 백엔드 API로 전송하는 로직 구현.</p>
 
 ## 💥 트러블 슈팅 (Frontend Focus)
